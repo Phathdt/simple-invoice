@@ -8,7 +8,7 @@ import { IUserRepository } from '../../domain/interfaces/user.repository'
 function toUser(row: PrismaUser): User {
   return {
     id: row.id,
-    name: row.name,
+    fullName: row.fullName,
     email: row.email,
     createdAt: row.createdAt,
   }
@@ -17,9 +17,9 @@ function toUser(row: PrismaUser): User {
 function toCredentials(row: PrismaUser): UserCredentials {
   return {
     id: row.id,
-    name: row.name,
+    fullName: row.fullName,
     email: row.email,
-    password: row.password,
+    passwordHash: row.passwordHash,
     createdAt: row.createdAt,
   }
 }
@@ -49,7 +49,7 @@ export class UserPrismaRepository implements IUserRepository {
     return row ? toCredentials(row) : null
   }
 
-  async create(data: { name: string; email: string; password: string }): Promise<User> {
+  async create(data: { fullName: string; email: string; passwordHash: string }): Promise<User> {
     const row = await this.prisma.user.create({ data })
     return toUser(row)
   }

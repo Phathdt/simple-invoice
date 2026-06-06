@@ -24,11 +24,11 @@ describe('Domain services (integration)', () => {
     users = moduleRef.get(IUserService)
 
     alice = await prisma.user.create({
-      data: { name: 'alice', email: 'alice@d.test', password: 'x' },
+      data: { fullName: 'alice', email: 'alice@d.test', passwordHash: 'x' },
     })
     // Second user ensures findById returns the correct record, not just the only row.
     await prisma.user.create({
-      data: { name: 'bob', email: 'bob@d.test', password: 'x' },
+      data: { fullName: 'bob', email: 'bob@d.test', passwordHash: 'x' },
     })
   })
 
@@ -40,7 +40,7 @@ describe('Domain services (integration)', () => {
   describe('UserService', () => {
     it('findById returns user', async () => {
       const u = await users.findById(alice.id)
-      expect(u.name).toBe('alice')
+      expect(u.fullName).toBe('alice')
     })
 
     it('findById throws NotFoundException on missing', async () => {

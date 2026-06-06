@@ -4,9 +4,13 @@
 
 export * from './application/services/auth.service'
 export * from './domain/errors'
+export * from './domain/dto/auth-response.dto'
 export * from './domain/dto/login.input'
 export * from './domain/dto/register.input'
 export * from './domain/interfaces/auth.service'
 export * from './domain/interfaces/token-signer'
+export * from './infrastructure/decorators/current-user.decorator'
+export * from './infrastructure/decorators/public.decorator'
+export * from './infrastructure/guards/jwt-auth.guard'
 export * from './infrastructure/http/auth.controller'
 export * from './infrastructure/token/jwt-token-signer'

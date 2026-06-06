@@ -5,7 +5,7 @@ import { z } from 'zod'
 const emailSchema = z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email')
 
 export const registerSchema = z.object({
-  name: z.string().min(2),
+  fullName: z.string().min(2),
   email: emailSchema,
   password: z.string().min(6),
 })

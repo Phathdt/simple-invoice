@@ -1,4 +1,4 @@
-import { IUserRepository } from '@modules/user'
+import { IUserRepository, UserNotFoundError, type User } from '@modules/user'
 
 import { compare, hash } from 'bcryptjs'
 
@@ -18,8 +18,8 @@ export class AuthService implements IAuthService {
     const existing = await this.users.findByEmail(input.email)
     if (existing) throw new EmailAlreadyRegisteredError()
 
-    const password = await hash(input.password, 10)
-    const user = await this.users.create({ name: input.name, email: input.email, password })
+    const passwordHash = await hash(input.password, 10)
+    const user = await this.users.create({ fullName: input.fullName, email: input.email, passwordHash })
     return this.sign(user)
   }
 
@@ -27,19 +27,25 @@ export class AuthService implements IAuthService {
     const creds = await this.users.findCredentialsByEmail(input.email)
     if (!creds) throw new InvalidCredentialsError()
 
-    const ok = await compare(input.password, creds.password)
+    const ok = await compare(input.password, creds.passwordHash)
     if (!ok) throw new InvalidCredentialsError()
 
     return this.sign(creds)
   }
 
-  private sign(user: { id: string; email: string; name: string; createdAt: Date }): AuthSession {
+  async me(userId: string): Promise<User> {
+    const user = await this.users.findById(userId)
+    if (!user) throw new UserNotFoundError(userId)
+    return user
+  }
+
+  private sign(user: { id: string; email: string; fullName: string; createdAt: Date }): AuthSession {
     const token = this.tokens.sign({ sub: user.id, email: user.email })
     return {
       token,
       user: {
         id: user.id,
-        name: user.name,
+        fullName: user.fullName,
         email: user.email,
         createdAt: user.createdAt,
       },

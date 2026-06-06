@@ -13,15 +13,15 @@ const prisma = new PrismaClient({
 async function main() {
   await prisma.user.deleteMany()
 
-  const password = await hash('password123', 10)
+  const passwordHash = await hash('password123', 10)
 
   const users = await Promise.all(
     ['alice', 'bob', 'carol', 'dave', 'eve'].map((name, i) =>
       prisma.user.create({
         data: {
-          name,
+          fullName: name,
           email: `${name}@simple-invoice.dev`,
-          password,
+          passwordHash,
           createdAt: new Date(Date.now() - i * 86400_000),
         },
       }),

@@ -2,6 +2,7 @@ import { compare, hash } from 'bcryptjs'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { IUserRepository } from '../../../user/domain/interfaces/user.repository'
+import { UserNotFoundError } from '../../../user/domain/errors'
 import { EmailAlreadyRegisteredError, InvalidCredentialsError } from '../../domain/errors'
 import type { ITokenSigner } from '../../domain/interfaces/token-signer'
 import { AuthService } from './auth.service'
@@ -24,7 +25,7 @@ describe('AuthService (unit)', () => {
     it('throws EmailAlreadyRegisteredError when email already taken', async () => {
       const { service, users } = makeService()
       ;(users.findByEmail as ReturnType<typeof vi.fn>).mockResolvedValue({ id: 'u1' })
-      await expect(service.register({ name: 'a', email: 'a@b.c', password: 'secret123' })).rejects.toBeInstanceOf(
+      await expect(service.register({ fullName: 'a', email: 'a@b.c', password: 'secret123' })).rejects.toBeInstanceOf(
         EmailAlreadyRegisteredError,
       )
     })
@@ -34,23 +35,23 @@ describe('AuthService (unit)', () => {
       ;(users.findByEmail as ReturnType<typeof vi.fn>).mockResolvedValue(null)
       const created = {
         id: 'u1',
-        name: 'alice',
+        fullName: 'alice',
         email: 'a@b.c',
-        password: 'hashed',
+        passwordHash: 'hashed',
         createdAt: new Date(),
       }
       ;(users.create as ReturnType<typeof vi.fn>).mockResolvedValue(created)
 
       const result = await service.register({
-        name: 'alice',
+        fullName: 'alice',
         email: 'a@b.c',
         password: 'secret123',
       })
 
       const createCall = (users.create as ReturnType<typeof vi.fn>).mock.calls[0][0]
       expect(createCall.email).toBe('a@b.c')
-      expect(createCall.password).not.toBe('secret123')
-      expect(await compare('secret123', createCall.password)).toBe(true)
+      expect(createCall.passwordHash).not.toBe('secret123')
+      expect(await compare('secret123', createCall.passwordHash)).toBe(true)
       expect(tokens.sign).toHaveBeenCalledWith({ sub: 'u1', email: 'a@b.c' })
       expect(result.token).toBe('tok-abc')
       expect(result.user.id).toBe('u1')
@@ -71,9 +72,9 @@ describe('AuthService (unit)', () => {
       const hashed = await hash('correct', 10)
       ;(users.findCredentialsByEmail as ReturnType<typeof vi.fn>).mockResolvedValue({
         id: 'u1',
-        name: 'a',
+        fullName: 'a',
         email: 'a@b.c',
-        password: hashed,
+        passwordHash: hashed,
         createdAt: new Date(),
       })
       await expect(service.login({ email: 'a@b.c', password: 'wrong' })).rejects.toBeInstanceOf(InvalidCredentialsError)
@@ -84,15 +85,30 @@ describe('AuthService (unit)', () => {
       const hashed = await hash('correct', 10)
       ;(users.findCredentialsByEmail as ReturnType<typeof vi.fn>).mockResolvedValue({
         id: 'u1',
-        name: 'a',
+        fullName: 'a',
         email: 'a@b.c',
-        password: hashed,
+        passwordHash: hashed,
         createdAt: new Date(),
       })
       const result = await service.login({ email: 'a@b.c', password: 'correct' })
       expect(tokens.sign).toHaveBeenCalled()
       expect(result.token).toBe('tok-abc')
       expect(result.user.email).toBe('a@b.c')
+    })
+  })
+
+  describe('me', () => {
+    it('returns user when found', async () => {
+      const { service, users } = makeService()
+      const user = { id: 'u1', fullName: 'a', email: 'a@b.c', createdAt: new Date() }
+      ;(users.findById as ReturnType<typeof vi.fn>).mockResolvedValue(user)
+      await expect(service.me('u1')).resolves.toEqual(user)
+    })
+
+    it('throws UserNotFoundError when user missing', async () => {
+      const { service, users } = makeService()
+      ;(users.findById as ReturnType<typeof vi.fn>).mockResolvedValue(null)
+      await expect(service.me('missing')).rejects.toBeInstanceOf(UserNotFoundError)
     })
   })
 })

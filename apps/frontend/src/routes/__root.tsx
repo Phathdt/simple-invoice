@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Outlet, createRootRoute } from '@tanstack/react-router'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -9,13 +10,10 @@ const queryClient = new QueryClient({
   },
 })
 
-export function App() {
-  return (
+export const Route = createRootRoute({
+  component: () => (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-gray-50">
-        <h1 className="text-2xl font-bold p-8">SimpleInvoice</h1>
-        <p className="px-8 text-gray-600">Frontend setup complete. Orval pipeline ready.</p>
-      </div>
+      <Outlet />
     </QueryClientProvider>
-  )
-}
+  ),
+})

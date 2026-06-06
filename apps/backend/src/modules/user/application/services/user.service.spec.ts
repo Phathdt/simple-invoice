@@ -15,7 +15,7 @@ describe('UserService', () => {
   it('findById: returns user when found', async () => {
     const testUser: User = {
       id: 'u1',
-      name: 'Alice',
+      fullName: 'Alice',
       email: 'alice@example.com',
       createdAt: new Date(),
     }

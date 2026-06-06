@@ -28,7 +28,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/simple-invoice
-      JWT_SECRET: change-me-in-prod
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set (e.g. in a .env file or the shell environment)}
       NODE_ENV: production
       PORT: "4000"
       LOG_LEVEL: info

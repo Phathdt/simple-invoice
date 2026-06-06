@@ -28,13 +28,13 @@ describe('UserPrismaRepository (integration)', () => {
   })
 
   describe('findById', () => {
-    it('returns mapped user without password', async () => {
+    it('returns mapped user without password hash', async () => {
       const row = await prisma.user.create({
-        data: { name: 'find-me', email: `find-${Date.now()}@t.dev`, password: 'secret-hash' },
+        data: { fullName: 'find-me', email: `find-${Date.now()}@t.dev`, passwordHash: 'secret-hash' },
       })
       const user = await repo.findById(row.id)
-      expect(user).toMatchObject({ id: row.id, name: 'find-me' })
-      expect((user as unknown as Record<string, unknown>).password).toBeUndefined()
+      expect(user).toMatchObject({ id: row.id, fullName: 'find-me' })
+      expect((user as unknown as Record<string, unknown>).passwordHash).toBeUndefined()
     })
 
     it('returns null on missing id', async () => {
@@ -44,19 +44,19 @@ describe('UserPrismaRepository (integration)', () => {
   })
 
   describe('findByIds', () => {
-    it('returns users matching the given ids without password', async () => {
+    it('returns users matching the given ids without password hash', async () => {
       const stamp = Date.now()
-      const a = await prisma.user.create({ data: { name: 'a', email: `bulk-a-${stamp}@t.dev`, password: 'h' } })
-      const b = await prisma.user.create({ data: { name: 'b', email: `bulk-b-${stamp}@t.dev`, password: 'h' } })
+      const a = await prisma.user.create({ data: { fullName: 'a', email: `bulk-a-${stamp}@t.dev`, passwordHash: 'h' } })
+      const b = await prisma.user.create({ data: { fullName: 'b', email: `bulk-b-${stamp}@t.dev`, passwordHash: 'h' } })
       const users = await repo.findByIds([a.id, b.id])
       const ids = users.map((u) => u.id).sort()
       expect(ids).toEqual([a.id, b.id].sort())
-      expect((users[0] as unknown as Record<string, unknown>).password).toBeUndefined()
+      expect((users[0] as unknown as Record<string, unknown>).passwordHash).toBeUndefined()
     })
 
     it('skips ids that do not exist', async () => {
       const a = await prisma.user.create({
-        data: { name: 'partial', email: `partial-${Date.now()}@t.dev`, password: 'h' },
+        data: { fullName: 'partial', email: `partial-${Date.now()}@t.dev`, passwordHash: 'h' },
       })
       const users = await repo.findByIds([a.id, '00000000-0000-0000-0000-000000000000'])
       expect(users).toHaveLength(1)
@@ -69,12 +69,12 @@ describe('UserPrismaRepository (integration)', () => {
   })
 
   describe('findByEmail', () => {
-    it('returns user without password', async () => {
+    it('returns user without password hash', async () => {
       const email = `email-${Date.now()}@t.dev`
-      await prisma.user.create({ data: { name: 'a', email, password: 'h' } })
+      await prisma.user.create({ data: { fullName: 'a', email, passwordHash: 'h' } })
       const user = await repo.findByEmail(email)
       expect(user?.email).toBe(email)
-      expect((user as unknown as Record<string, unknown>).password).toBeUndefined()
+      expect((user as unknown as Record<string, unknown>).passwordHash).toBeUndefined()
     })
 
     it('returns null when email not registered', async () => {
@@ -85,9 +85,9 @@ describe('UserPrismaRepository (integration)', () => {
   describe('findCredentialsByEmail', () => {
     it('returns credentials including password hash', async () => {
       const email = `cred-${Date.now()}@t.dev`
-      await prisma.user.create({ data: { name: 'b', email, password: 'hashed-xyz' } })
+      await prisma.user.create({ data: { fullName: 'b', email, passwordHash: 'hashed-xyz' } })
       const creds = await repo.findCredentialsByEmail(email)
-      expect(creds?.password).toBe('hashed-xyz')
+      expect(creds?.passwordHash).toBe('hashed-xyz')
       expect(creds?.email).toBe(email)
     })
 
@@ -97,14 +97,14 @@ describe('UserPrismaRepository (integration)', () => {
   })
 
   describe('create', () => {
-    it('persists row and returns mapped user without password', async () => {
+    it('persists row and returns mapped user without password hash', async () => {
       const email = `create-${Date.now()}@t.dev`
-      const user = await repo.create({ name: 'new', email, password: 'pw-hash' })
-      expect(user).toMatchObject({ name: 'new', email })
-      expect((user as unknown as Record<string, unknown>).password).toBeUndefined()
+      const user = await repo.create({ fullName: 'new', email, passwordHash: 'pw-hash' })
+      expect(user).toMatchObject({ fullName: 'new', email })
+      expect((user as unknown as Record<string, unknown>).passwordHash).toBeUndefined()
 
       const row = await prisma.user.findUnique({ where: { id: user.id } })
-      expect(row?.password).toBe('pw-hash')
+      expect(row?.passwordHash).toBe('pw-hash')
     })
   })
 })

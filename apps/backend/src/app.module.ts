@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 
 import { LoggerModule } from 'nestjs-pino'
 
@@ -9,6 +10,7 @@ import { UserModule } from './modules/user/user.module'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot(loggerConfig),
     PrismaModule,
     UserModule,

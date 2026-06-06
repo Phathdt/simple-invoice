@@ -6,5 +6,8 @@
  * OpenAPI spec version: 1.0
  */
 
+export * from './authSessionResponse.ts';
+export * from './authSessionResponseUser.ts';
 export * from './loginInput.ts';
 export * from './registerInput.ts';
+export * from './userResponse.ts';

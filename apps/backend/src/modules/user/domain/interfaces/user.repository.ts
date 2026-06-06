@@ -5,5 +5,5 @@ export abstract class IUserRepository {
   abstract findByIds(ids: string[]): Promise<User[]>
   abstract findByEmail(email: string): Promise<User | null>
   abstract findCredentialsByEmail(email: string): Promise<UserCredentials | null>
-  abstract create(data: { name: string; email: string; password: string }): Promise<User>
+  abstract create(data: { fullName: string; email: string; passwordHash: string }): Promise<User>
 }

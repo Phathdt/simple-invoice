@@ -14,7 +14,9 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
   return config
 })
 
-// Response interceptor: handle 401 by clearing token and redirecting to login
+// Response interceptor: handle 401 by clearing token and redirecting to login.
+// Skip for the login request itself — a 401 there means bad credentials, which
+// the login form surfaces inline; redirecting would discard that message.
 AXIOS_INSTANCE.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
@@ -24,8 +26,11 @@ AXIOS_INSTANCE.interceptors.response.use(
       'response' in error &&
       (error as { response?: { status?: number } }).response?.status === 401
     ) {
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+      const url = (error as { config?: { url?: string } }).config?.url ?? ''
+      if (!url.includes('/auth/login')) {
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   },

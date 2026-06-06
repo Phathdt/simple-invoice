@@ -11,4 +11,5 @@ export interface AuthSession {
 export abstract class IAuthService {
   abstract register(input: RegisterInput): Promise<AuthSession>
   abstract login(input: LoginInput): Promise<AuthSession>
+  abstract me(userId: string): Promise<User>
 }

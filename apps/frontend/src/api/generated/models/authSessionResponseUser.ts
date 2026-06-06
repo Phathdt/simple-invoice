@@ -6,11 +6,9 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface RegisterInput {
-  /** @minLength 2 */
+export type AuthSessionResponseUser = {
+  id: string;
   fullName: string;
-  /** @pattern ^[^\s@]+@[^\s@]+\.[^\s@]+$ */
   email: string;
-  /** @minLength 6 */
-  password: string;
-}
+  createdAt: string;
+};

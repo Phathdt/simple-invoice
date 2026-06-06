@@ -8,7 +8,10 @@
 import * as zod from 'zod';
 
 
-export const authControllerRegisterBodyNameMin = 2;
+/**
+ * @summary Register new user
+ */
+export const authControllerRegisterBodyFullNameMin = 2;
 
 export const authControllerRegisterBodyEmailRegExp = new RegExp('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
 export const authControllerRegisterBodyPasswordMin = 6;
@@ -16,13 +19,16 @@ export const authControllerRegisterBodyPasswordMin = 6;
 
 
 export const AuthControllerRegisterBody = zod.object({
-  "name": zod.string().min(authControllerRegisterBodyNameMin),
+  "fullName": zod.string().min(authControllerRegisterBodyFullNameMin),
   "email": zod.string().regex(authControllerRegisterBodyEmailRegExp),
   "password": zod.string().min(authControllerRegisterBodyPasswordMin)
 })
 
 export const AuthControllerRegisterResponse = zod.void()
 
+/**
+ * @summary Login with email/password
+ */
 export const authControllerLoginBodyEmailRegExp = new RegExp('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
 export const authControllerLoginBodyPasswordMin = 6;
 
@@ -34,4 +40,14 @@ export const AuthControllerLoginBody = zod.object({
 })
 
 export const AuthControllerLoginResponse = zod.void()
+
+/**
+ * @summary Get current user profile
+ */
+export const AuthControllerMeResponse = zod.object({
+  "id": zod.string(),
+  "fullName": zod.string(),
+  "email": zod.string(),
+  "createdAt": zod.string()
+})
 

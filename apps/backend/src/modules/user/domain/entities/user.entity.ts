@@ -1,10 +1,10 @@
 export interface User {
   id: string
-  name: string
+  fullName: string
   email: string
   createdAt: Date
 }
 
 export interface UserCredentials extends User {
-  password: string
+  passwordHash: string
 }
