@@ -26,7 +26,10 @@ export interface CreateInvoiceInput {
   customerEmail: string;
   customerMobile?: string;
   customerAddress?: string;
-  /** @minItems 1 */
+  /**
+     * @minItems 1
+     * @maxItems 1
+     */
   items: CreateInvoiceInputItemsItem[];
   /** @minimum 0 */
   tax?: number;

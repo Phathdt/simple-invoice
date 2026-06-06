@@ -1,12 +1,10 @@
-import { createRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createRoute, redirect } from '@tanstack/react-router'
 
-import { useInvoiceControllerList } from '@/api/generated/invoices/invoices'
-import type { InvoiceControllerListParams } from '@/api/generated/models'
 import { AppHeader } from '@/components/app-header'
 import { Button, Spinner } from '@/components/button'
 import { StatusBadge } from '@/components/status-badge'
-import { isAuthenticated, removeToken } from '@/lib/auth'
+import { useInvoiceList } from '@/hooks/use-invoice-list'
+import { isAuthenticated } from '@/lib/auth'
 
 import { Route as rootRoute } from './__root'
 
@@ -20,38 +18,30 @@ const selectCls =
   'rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10'
 
 function HomePage() {
-  const navigate = useNavigate()
-  const [page, setPage] = useState(1)
-  const pageSize = 10
-  const [keyword, setKeyword] = useState('')
-  const [status, setStatus] = useState('')
-  const [sortBy, setSortBy] = useState<NonNullable<InvoiceControllerListParams['sortBy']>>('createdAt')
-  const [ordering, setOrdering] = useState<NonNullable<InvoiceControllerListParams['ordering']>>('DESC')
-
-  const params: InvoiceControllerListParams = {
-    page,
-    pageSize,
-    sortBy,
-    ordering,
-    ...(keyword ? { keyword } : {}),
-    ...(status ? { status } : {}),
-  }
-
-  const { data: response, isLoading, isError } = useInvoiceControllerList(params)
-  const invoices = response?.data ?? []
-  const paging = response?.paging
-  const totalPages = paging ? Math.max(1, Math.ceil(paging.total / paging.pageSize)) : 1
-
-  const handleLogout = () => {
-    removeToken()
-    navigate({ to: '/login' })
-  }
+  const {
+    state,
+    setSortBy,
+    setOrdering,
+    onKeyword,
+    onStatus,
+    onFromDate,
+    onToDate,
+    prevPage,
+    nextPage,
+    logout,
+    openInvoice,
+    openCreate,
+    query: { isLoading, isError },
+    invoices,
+    paging,
+    totalPages,
+  } = useInvoiceList()
 
   return (
     <div className="min-h-dvh bg-slate-50">
       <AppHeader
         actions={
-          <Button variant="secondary" onClick={handleLogout}>
+          <Button variant="secondary" onClick={logout}>
             Log out
           </Button>
         }
@@ -63,7 +53,7 @@ function HomePage() {
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">Invoices</h2>
             <p className="mt-0.5 text-sm text-slate-500">Manage and track your invoices</p>
           </div>
-          <Button onClick={() => navigate({ to: '/invoices/create' })}>
+          <Button onClick={openCreate}>
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
@@ -85,38 +75,48 @@ function HomePage() {
             <input
               type="text"
               placeholder="Search by invoice number or customer..."
-              value={keyword}
-              onChange={(e) => {
-                setKeyword(e.target.value)
-                setPage(1)
-              }}
+              value={state.keyword}
+              onChange={(e) => onKeyword(e.target.value)}
               className="w-full rounded-lg border border-slate-300 py-2.5 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10"
             />
           </div>
-          <select
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value)
-              setPage(1)
-            }}
-            className={selectCls}
-          >
+          <select value={state.status} onChange={(e) => onStatus(e.target.value)} className={selectCls}>
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>
                 {s === '' ? 'All statuses' : s}
               </option>
             ))}
           </select>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as typeof sortBy)} className={selectCls}>
+          <select value={state.sortBy} onChange={(e) => setSortBy(e.target.value as typeof state.sortBy)} className={selectCls}>
             <option value="createdAt">Created date</option>
             <option value="invoiceDate">Invoice date</option>
             <option value="dueDate">Due date</option>
             <option value="totalAmount">Total amount</option>
           </select>
-          <select value={ordering} onChange={(e) => setOrdering(e.target.value as typeof ordering)} className={selectCls}>
+          <select value={state.ordering} onChange={(e) => setOrdering(e.target.value as typeof state.ordering)} className={selectCls}>
             <option value="DESC">Descending</option>
             <option value="ASC">Ascending</option>
           </select>
+          <label className="flex items-center gap-1.5 text-sm text-slate-500">
+            From
+            <input
+              type="date"
+              aria-label="From date"
+              value={state.fromDate}
+              onChange={(e) => onFromDate(e.target.value)}
+              className={selectCls}
+            />
+          </label>
+          <label className="flex items-center gap-1.5 text-sm text-slate-500">
+            To
+            <input
+              type="date"
+              aria-label="To date"
+              value={state.toDate}
+              onChange={(e) => onToDate(e.target.value)}
+              className={selectCls}
+            />
+          </label>
         </div>
 
         {isLoading && (
@@ -157,7 +157,7 @@ function HomePage() {
                   {invoices.map((invoice) => (
                     <tr
                       key={invoice.id}
-                      onClick={() => navigate({ to: '/invoices/$id', params: { id: invoice.id } })}
+                      onClick={() => openInvoice(invoice.id)}
                       className="cursor-pointer border-b border-slate-100 transition-colors duration-150 last:border-0 hover:bg-slate-50"
                     >
                       <td className="px-4 py-3 font-medium text-slate-900">{invoice.invoiceNumber}</td>
@@ -180,18 +180,18 @@ function HomePage() {
               <span>{paging ? `${paging.total} invoices` : ''}</span>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page <= 1}
+                  onClick={prevPage}
+                  disabled={state.page <= 1}
                   className="cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition-colors duration-150 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Previous
                 </button>
                 <span className="tabular-nums">
-                  Page {page} / {totalPages}
+                  Page {state.page} / {totalPages}
                 </span>
                 <button
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={page >= totalPages}
+                  onClick={nextPage}
+                  disabled={state.page >= totalPages}
                   className="cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 transition-colors duration-150 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   Next

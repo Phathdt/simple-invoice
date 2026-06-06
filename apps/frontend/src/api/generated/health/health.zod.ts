@@ -8,9 +8,8 @@
 import * as zod from 'zod';
 
 
-export const UserControllerFindByIdParams = zod.object({
-  "id": zod.string()
-})
-
-export const UserControllerFindByIdResponse = zod.unknown()
+/**
+ * @summary Health check
+ */
+export const HealthControllerCheckResponse = zod.unknown()
 

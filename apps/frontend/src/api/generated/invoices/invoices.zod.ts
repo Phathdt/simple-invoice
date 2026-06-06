@@ -24,6 +24,7 @@ export const invoiceControllerCreateBodyItemsItemQuantityMax = 9007199254740991;
 
 export const invoiceControllerCreateBodyItemsItemRateExclusiveMin = 0;
 
+export const invoiceControllerCreateBodyItemsMax = 1;
 
 export const invoiceControllerCreateBodyTaxDefault = 10;
 export const invoiceControllerCreateBodyTaxMin = 0;
@@ -49,7 +50,7 @@ export const InvoiceControllerCreateBody = zod.object({
   "name": zod.string().min(1),
   "quantity": zod.number().gt(invoiceControllerCreateBodyItemsItemQuantityExclusiveMin).max(invoiceControllerCreateBodyItemsItemQuantityMax),
   "rate": zod.number().gt(invoiceControllerCreateBodyItemsItemRateExclusiveMin)
-})).min(1),
+})).min(1).max(invoiceControllerCreateBodyItemsMax),
   "tax": zod.number().min(invoiceControllerCreateBodyTaxMin).default(invoiceControllerCreateBodyTaxDefault),
   "discount": zod.number().min(invoiceControllerCreateBodyDiscountMin).default(invoiceControllerCreateBodyDiscountDefault)
 })

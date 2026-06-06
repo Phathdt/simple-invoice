@@ -1,5 +1,15 @@
 openapi: 3.0.0
 paths:
+  /health:
+    get:
+      operationId: HealthController_check
+      parameters: []
+      responses:
+        '200':
+          description: Service is healthy
+      summary: Health check
+      tags:
+        - health
   /auth/register:
     post:
       operationId: AuthController_register
@@ -319,6 +329,7 @@ components:
           type: string
         items:
           minItems: 1
+          maxItems: 1
           type: array
           items:
             type: object

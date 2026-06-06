@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
+import { useSessionValidation } from '@/hooks/use-session-validation'
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -10,10 +12,15 @@ const queryClient = new QueryClient({
   },
 })
 
+function RootLayout() {
+  useSessionValidation()
+  return <Outlet />
+}
+
 export const Route = createRootRoute({
   component: () => (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <RootLayout />
     </QueryClientProvider>
   ),
 })

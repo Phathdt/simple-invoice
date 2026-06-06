@@ -1,41 +1,14 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { createRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { createRoute, redirect } from '@tanstack/react-router'
 
-import { useAuthControllerLogin } from '@/api/generated/auth/auth'
 import { BrandLogo } from '@/components/app-header'
 import { Button, Spinner } from '@/components/button'
-import { isAuthenticated, setToken } from '@/lib/auth'
+import { useLogin } from '@/hooks/use-login'
+import { isAuthenticated } from '@/lib/auth'
 
 import { Route as rootRoute } from './__root'
 
-const loginSchema = z.object({
-  email: z.email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
-type LoginForm = z.infer<typeof loginSchema>
-
 function LoginPage() {
-  const navigate = useNavigate()
-  const login = useAuthControllerLogin()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
-
-  const onSubmit = (data: LoginForm) => {
-    login.mutate(
-      { data },
-      {
-        onSuccess: (res) => {
-          setToken(res.data.token)
-          navigate({ to: '/' })
-        },
-      },
-    )
-  }
+  const { register, errors, submit, isPending, isError } = useLogin()
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
@@ -47,7 +20,7 @@ function LoginPage() {
 
         {/* Card */}
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+          <form onSubmit={submit} className="space-y-5" noValidate>
             <div>
               <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700">
                 Email
@@ -92,7 +65,7 @@ function LoginPage() {
               )}
             </div>
 
-            {login.isError && (
+            {isError && (
               <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700">
                 <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
@@ -101,8 +74,8 @@ function LoginPage() {
               </div>
             )}
 
-            <Button type="submit" disabled={login.isPending} className="w-full">
-              {login.isPending ? (
+            <Button type="submit" disabled={isPending} className="w-full">
+              {isPending ? (
                 <>
                   <Spinner />
                   Signing in...

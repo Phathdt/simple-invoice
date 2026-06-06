@@ -1,30 +1,21 @@
-import { createRoute, redirect, useNavigate, useParams } from '@tanstack/react-router'
+import { createRoute, redirect } from '@tanstack/react-router'
 
-import { useInvoiceControllerFindById } from '@/api/generated/invoices/invoices'
 import { AppHeader } from '@/components/app-header'
 import { Button, Spinner } from '@/components/button'
 import { StatusBadge } from '@/components/status-badge'
+import { useInvoiceDetail } from '@/hooks/use-invoice-detail'
 import { isAuthenticated } from '@/lib/auth'
 
 import { Route as rootRoute } from '../__root'
 
 function InvoiceDetailPage() {
-  const navigate = useNavigate()
-  const { id } = useParams({ from: '/invoices/$id' })
-  const { data: response, isLoading, isError } = useInvoiceControllerFindById(id)
-  const invoice = response?.data
-
-  const money = (amount: number) =>
-    `${invoice?.currencySymbol ?? ''}${amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`
+  const { invoice, isLoading, isError, money, goToList } = useInvoiceDetail()
 
   return (
     <div className="min-h-dvh bg-slate-50">
       <AppHeader
         actions={
-          <Button variant="secondary" onClick={() => navigate({ to: '/' })}>
+          <Button variant="secondary" onClick={goToList}>
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
