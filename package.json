@@ -24,6 +24,8 @@
     "docker:build": "docker compose build",
     "docker:up": "docker compose up -d",
     "docker:logs": "docker compose logs -f backend frontend",
+    "openapi:export": "pnpm --filter backend openapi:export",
+    "api:generate": "pnpm --filter backend openapi:export && pnpm --filter frontend generate:api",
     "prepare": "lefthook install"
   },
   "devDependencies": {

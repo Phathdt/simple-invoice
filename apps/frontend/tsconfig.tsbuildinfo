@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/api/axios-instance.ts","./src/api/generated/auth/auth.ts","./src/api/generated/auth/auth.zod.ts","./src/api/generated/models/index.ts","./src/api/generated/models/loginInput.ts","./src/api/generated/models/registerInput.ts","./src/api/generated/user/user.ts","./src/api/generated/user/user.zod.ts"],"version":"5.9.3"}

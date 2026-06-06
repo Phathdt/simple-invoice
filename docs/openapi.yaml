@@ -1,0 +1,88 @@
+openapi: 3.0.0
+paths:
+  /users/{id}:
+    get:
+      operationId: UserController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - User
+  /auth/register:
+    post:
+      operationId: AuthController_register
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInput'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Auth
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Auth
+info:
+  title: SimpleInvoice API
+  description: SimpleInvoice REST API
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    RegisterInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+        password:
+          type: string
+          minLength: 6
+      required:
+        - name
+        - email
+        - password
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+        password:
+          type: string
+          minLength: 6
+      required:
+        - email
+        - password

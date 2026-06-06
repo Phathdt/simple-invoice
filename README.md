@@ -7,16 +7,23 @@ A full-stack invoice management application built with NestJS (backend) and Reac
 ```
 simple-invoice/
 ├── apps/
-│   └── backend/           # NestJS REST API
-│       ├── prisma/         # Schema, migrations, seed
+│   ├── backend/           # NestJS REST API
+│   │   ├── prisma/         # Schema, migrations, seed
+│   │   └── src/
+│   │       ├── modules/
+│   │       │   ├── auth/   # JWT authentication
+│   │       │   ├── user/   # User management
+│   │       │   └── invoice/ # Invoice CRUD (in progress)
+│   │       └── main.ts
+│   └── frontend/          # React + Vite SPA
 │       └── src/
-│           ├── modules/
-│           │   ├── auth/   # JWT authentication
-│           │   ├── user/   # User management
-│           │   └── invoice/ # Invoice CRUD (in progress)
-│           └── main.ts
+│           ├── api/        # Orval-generated client (hooks + Zod) + Axios mutator
+│           ├── app.tsx
+│           └── main.tsx
 ├── packages/
 │   └── tsconfig/           # Shared TypeScript config
+├── docs/
+│   └── openapi.yaml        # Generated OpenAPI spec (source for FE client)
 ├── docker-compose.yml
 └── README.md
 ```
@@ -81,6 +88,29 @@ pnpm dev:be
 
 API available at `http://localhost:4000`.  
 Swagger UI at `http://localhost:4000/api/docs`.
+
+### 7. Start the frontend
+
+```bash
+pnpm dev:fe
+```
+
+Frontend dev server at `http://localhost:5173` (proxies `/api` to the backend on port 4000).
+
+## Type-Safe API Client (Orval)
+
+The frontend never hand-writes API types or hooks. They are generated from the backend's OpenAPI spec:
+
+```
+NestJS (@nestjs/swagger) → docs/openapi.yaml → Orval → React Query hooks + Zod schemas
+```
+
+```bash
+pnpm openapi:export    # boot backend headless, write docs/openapi.yaml
+pnpm api:generate      # export spec + run Orval (one command)
+```
+
+Generated output lands in `apps/frontend/src/api/generated/` (React Query hooks, TS models, Zod schemas). Re-run `pnpm api:generate` after changing any backend controller or DTO. The committed `docs/openapi.yaml` lets the frontend regenerate without a running backend.
 
 ## Running with Docker
 
@@ -156,7 +186,7 @@ pnpm test:integration
 
 ## Known Limitations
 
-- `apps/frontend` is not yet implemented; the `docker-compose.yml` frontend service will fail to build until the app is added.
+- `apps/frontend` is scaffolded (Vite + React + Orval client pipeline) but the UI screens (login, invoice list/detail/create) are not yet implemented.
 - The invoice module (list, detail, create endpoints) is not yet implemented — only authentication and user management are complete.
 - No refresh token mechanism; sessions expire after the configured TTL.
 - Password reset and email verification are out of scope for this assessment.

@@ -1,8 +1,8 @@
 {
   "directory": [
-    "./apps/backend/src/modules/auth",
-    "./apps/backend/src/modules/user",
-    "./apps/backend/src/modules/prisma"
+    "./src/modules/auth",
+    "./src/modules/user",
+    "./src/modules/prisma"
   ],
   "exclude": [
     "\\.spec\\.ts$",

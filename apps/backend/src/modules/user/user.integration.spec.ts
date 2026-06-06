@@ -14,7 +14,6 @@ describe('Domain services (integration)', () => {
   let users: IUserService
 
   let alice: { id: string }
-  let bob: { id: string }
 
   beforeAll(async () => {
     await startPostgres()
@@ -27,7 +26,8 @@ describe('Domain services (integration)', () => {
     alice = await prisma.user.create({
       data: { name: 'alice', email: 'alice@d.test', password: 'x' },
     })
-    bob = await prisma.user.create({
+    // Second user ensures findById returns the correct record, not just the only row.
+    await prisma.user.create({
       data: { name: 'bob', email: 'bob@d.test', password: 'x' },
     })
   })

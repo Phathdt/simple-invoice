@@ -1,7 +1,8 @@
 import 'dotenv/config'
 
 import { NestFactory } from '@nestjs/core'
-import { ZodValidationPipe } from 'nestjs-zod'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { ZodValidationPipe, cleanupOpenApiDoc } from 'nestjs-zod'
 
 import { Logger } from 'nestjs-pino'
 
@@ -12,6 +13,17 @@ async function bootstrap() {
   app.useLogger(app.get(Logger))
   app.useGlobalPipes(new ZodValidationPipe())
   app.enableCors({ origin: true, credentials: true })
+
+  const config = new DocumentBuilder()
+    .setTitle('SimpleInvoice API')
+    .setDescription('SimpleInvoice REST API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build()
+
+  const document = cleanupOpenApiDoc(SwaggerModule.createDocument(app, config))
+  SwaggerModule.setup('api/docs', app, document)
+
   await app.listen(process.env.PORT ?? 4000)
 }
 bootstrap()
