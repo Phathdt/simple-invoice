@@ -127,6 +127,8 @@ export class InvoicePrismaRepository implements IInvoiceRepository {
     if (filter.status === 'Overdue') {
       // Overdue is derived, never persisted: not-yet-settled invoices past due.
       where.AND = [{ status: { in: ['Draft', 'Pending'] } }, { dueDate: { lt: startOfToday() } }]
+    } else if (filter.status === 'Draft' || filter.status === 'Pending') {
+      where.AND = [{ status: filter.status }, { dueDate: { gte: startOfToday() } }]
     } else if (filter.status) {
       where.status = filter.status
     }

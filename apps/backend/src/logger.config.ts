@@ -25,5 +25,11 @@ export const loggerConfig: Params = {
       if (res.statusCode >= 400) return 'warn'
       return 'info'
     },
+    customSuccessMessage: (req, res) => {
+      return `${req.method} ${req.url} -> ${res.statusCode}`
+    },
+    customErrorMessage: (req, res) => {
+      return `${req.method} ${req.url} -> ${res.statusCode}`
+    },
   },
 }

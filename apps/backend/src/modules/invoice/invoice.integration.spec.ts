@@ -120,6 +120,17 @@ describe('Invoice (integration)', () => {
     expect(res.body.data.every((i: { status: string }) => i.status === 'Overdue')).toBe(true)
   })
 
+  it('GET /invoices?status=Draft excludes invoices displayed as Overdue', async () => {
+    await request(app.getHttpServer())
+      .post('/invoices')
+      .set(auth())
+      .send({ ...validInvoice(), invoiceDate: '2020-01-01', dueDate: '2020-02-01' })
+
+    const res = await request(app.getHttpServer()).get('/invoices').query({ status: 'Draft' }).set(auth())
+    expect(res.status).toBe(200)
+    expect(res.body.data.every((i: { status: string }) => i.status === 'Draft')).toBe(true)
+  })
+
   it('GET /invoices/:id returns invoice with items', async () => {
     const created = await request(app.getHttpServer()).post('/invoices').set(auth()).send(validInvoice())
     const id = created.body.data.id
