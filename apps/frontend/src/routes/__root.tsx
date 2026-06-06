@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 
-import { useSessionValidation } from '@/hooks/use-session-validation'
+import { useSessionValidation } from '@/features/auth/hooks/use-session-validation'
 
 const queryClient = new QueryClient({
   defaultOptions: {

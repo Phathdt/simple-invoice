@@ -19,8 +19,9 @@ simple-invoice/
 │   │   └── src/
 │   │       ├── api/        # Orval-generated client (hooks + Zod) + Axios mutator
 │   │       ├── components/ # Shared UI (header, button, status badge)
-│   │       ├── hooks/      # Business logic (login, invoice list/detail/create, session)
-│   │       ├── routes/     # TanStack Router route components
+│   │       ├── features/   # Feature modules (auth, invoice) — page + hooks per feature
+│   │       ├── lib/        # auth token helpers
+│   │       ├── routes/     # Thin TanStack Router wiring (renders feature pages)
 │   │       └── main.tsx
 │   └── e2e/               # Cucumber + Playwright end-to-end tests
 │       ├── config/         # Test + URL config

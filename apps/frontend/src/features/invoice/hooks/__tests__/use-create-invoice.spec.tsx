@@ -63,4 +63,3 @@ describe('useCreateInvoice', () => {
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/' })
   })
 })
-

@@ -1,73 +1,9 @@
 import { createRoute, redirect } from '@tanstack/react-router'
 
-import { AppHeader } from '@/components/app-header'
-import { Button, Spinner } from '@/components/button'
-import { useCreateInvoice } from '@/hooks/use-create-invoice'
+import { CreateInvoicePage } from '@/features/invoice/create-invoice-page'
 import { isAuthenticated } from '@/lib/auth'
 
 import { Route as rootRoute } from '../__root'
-import {
-  CustomerSection,
-  InvoiceDetailsSection,
-  ItemSection,
-  TaxDiscountSection,
-} from './create-invoice-form-sections'
-
-function CreateInvoicePage() {
-  const { register, errors, submit, goToList, created, isPending, isError, errorMessage } = useCreateInvoice()
-
-  return (
-    <div className="min-h-dvh bg-slate-50">
-      <AppHeader
-        actions={
-          <Button type="button" variant="secondary" onClick={goToList}>
-            Cancel
-          </Button>
-        }
-      />
-
-      <main className="mx-auto max-w-3xl p-4 sm:p-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Create invoice</h2>
-          <p className="mt-0.5 text-sm text-slate-500">Enter invoice, customer, and payment item details</p>
-        </div>
-
-        <form onSubmit={submit} noValidate className="space-y-6">
-          <InvoiceDetailsSection register={register} errors={errors} />
-          <CustomerSection register={register} errors={errors} />
-          <ItemSection register={register} errors={errors} />
-          <TaxDiscountSection register={register} errors={errors} />
-
-          {created && (
-            <div data-testid="create-success" className="rounded-lg bg-green-50 px-3.5 py-3 text-sm text-green-700" role="status">
-              Invoice created successfully. Redirecting to the invoice list...
-            </div>
-          )}
-
-          {isError && (
-            <div className="rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700">{errorMessage}</div>
-          )}
-
-          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <Button type="button" variant="secondary" onClick={goToList}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending} data-testid="create-submit">
-              {isPending ? (
-                <>
-                  <Spinner />
-                  Creating...
-                </>
-              ) : (
-                'Create invoice'
-              )}
-            </Button>
-          </div>
-        </form>
-      </main>
-    </div>
-  )
-}
 
 export const Route = createRoute({
   getParentRoute: () => rootRoute,

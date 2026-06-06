@@ -82,14 +82,18 @@ apps/frontend/src/
 │       ├── <tag>/<tag>.ts     # React Query hooks + Axios fns + query keys
 │       └── <tag>/<tag>.zod.ts # Zod validation schemas per tag
 ├── components/                # Shared presentational UI (app-header, button, status-badge)
-├── hooks/                     # Business logic per screen (use-login, use-invoice-list, etc.)
+├── features/                  # Feature-based modules (split by domain)
+│   ├── auth/                  # login-page + hooks/{use-login, use-session-validation}
+│   └── invoice/               # list/detail/create pages + form + hooks/{use-invoice-*}
 ├── lib/                       # auth token helpers
-├── routes/                    # TanStack Router route components (presentational)
+├── routes/                    # Thin TanStack Router wiring (createRoute + beforeLoad guard)
 └── main.tsx
 ```
 
-- Route components stay presentational; screen logic (state, mutations, navigation) lives in `src/hooks/*`.
-- `use-session-validation` calls `GET /auth/me` on app load to validate the persisted token on refresh.
+- Feature-based layout: each `features/<name>/` owns its page components, `hooks/` (business logic + tests), and feature-local files.
+- Route files in `src/routes/` stay thin — they only wire `createRoute` (path, `beforeLoad` auth guard) and render the imported feature page. No screen logic lives there.
+- Shared UI in `components/` and token helpers in `lib/auth.ts` are cross-feature.
+- `features/auth/hooks/use-session-validation` calls `GET /auth/me` on app load to validate the persisted token on refresh.
 
 ## API Client Pipeline (type-safe, generated)
 

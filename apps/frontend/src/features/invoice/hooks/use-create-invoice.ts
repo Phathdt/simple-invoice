@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 
 import { useInvoiceControllerCreate } from '@/api/generated/invoices/invoices'
 
-import { type CreateInvoiceForm, createInvoiceSchema } from '@/routes/invoices/create-invoice-form-schema'
+import { type CreateInvoiceForm, createInvoiceSchema } from '../create-invoice-form-schema'
 
 const REDIRECT_DELAY_MS = 700
 
