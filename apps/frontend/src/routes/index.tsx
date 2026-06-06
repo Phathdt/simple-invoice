@@ -7,7 +7,8 @@ import { Route as rootRoute } from './__root'
 
 function HomePage() {
   const navigate = useNavigate()
-  const { data: user, isLoading } = useAuthControllerMe()
+  const { data: response, isLoading } = useAuthControllerMe()
+  const user = response?.data
 
   const handleLogout = () => {
     removeToken()

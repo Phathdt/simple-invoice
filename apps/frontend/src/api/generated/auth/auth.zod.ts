@@ -45,9 +45,11 @@ export const AuthControllerLoginResponse = zod.void()
  * @summary Get current user profile
  */
 export const AuthControllerMeResponse = zod.object({
+  "data": zod.object({
   "id": zod.string(),
   "fullName": zod.string(),
   "email": zod.string(),
   "createdAt": zod.string()
+})
 })
 

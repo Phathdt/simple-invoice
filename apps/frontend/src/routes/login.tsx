@@ -28,7 +28,7 @@ function LoginPage() {
       { data },
       {
         onSuccess: (res) => {
-          setToken(res.token)
+          setToken(res.data.token)
           navigate({ to: '/' })
         },
       },

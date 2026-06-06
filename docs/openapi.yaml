@@ -16,7 +16,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthSessionResponse'
+                $ref: '#/components/schemas/AuthSessionDataResponse'
         '409':
           description: Email already registered
       summary: Register new user
@@ -38,7 +38,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthSessionResponse'
+                $ref: '#/components/schemas/AuthSessionDataResponse'
         '401':
           description: Invalid credentials
       summary: Login with email/password
@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/UserDataResponse'
         '401':
           description: Unauthorized
       security:
@@ -92,12 +92,51 @@ components:
         - fullName
         - email
         - password
-    AuthSessionResponse:
+    AuthSessionDataResponse:
       type: object
       properties:
-        token:
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            user:
+              type: object
+              properties:
+                id:
+                  type: string
+                fullName:
+                  type: string
+                email:
+                  type: string
+                createdAt:
+                  type: string
+              required:
+                - id
+                - fullName
+                - email
+                - createdAt
+          required:
+            - token
+            - user
+      required:
+        - data
+    LoginInput:
+      type: object
+      properties:
+        email:
           type: string
-        user:
+          pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+        password:
+          type: string
+          minLength: 6
+      required:
+        - email
+        - password
+    UserDataResponse:
+      type: object
+      properties:
+        data:
           type: object
           properties:
             id:
@@ -114,33 +153,4 @@ components:
             - email
             - createdAt
       required:
-        - token
-        - user
-    LoginInput:
-      type: object
-      properties:
-        email:
-          type: string
-          pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
-        password:
-          type: string
-          minLength: 6
-      required:
-        - email
-        - password
-    UserResponse:
-      type: object
-      properties:
-        id:
-          type: string
-        fullName:
-          type: string
-        email:
-          type: string
-        createdAt:
-          type: string
-      required:
-        - id
-        - fullName
-        - email
-        - createdAt
+        - data

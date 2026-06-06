@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import { AuthSessionResponse, UserResponse } from '../../domain/dto/auth-response.dto'
+import { AuthSessionDataResponse, UserDataResponse } from '../../domain/dto/auth-response.dto'
 import { LoginInput } from '../../domain/dto/login.input'
 import { RegisterInput } from '../../domain/dto/register.input'
 import { IAuthService } from '../../domain/interfaces/auth.service'
@@ -16,7 +16,7 @@ export class AuthController {
   @Public()
   @Post('register')
   @ApiOperation({ summary: 'Register new user' })
-  @ApiResponse({ status: 201, description: 'User registered, JWT returned', type: AuthSessionResponse })
+  @ApiResponse({ status: 201, description: 'User registered, JWT returned', type: AuthSessionDataResponse })
   @ApiResponse({ status: 409, description: 'Email already registered' })
   register(@Body() body: RegisterInput) {
     return this.auth.register(body)
@@ -25,7 +25,7 @@ export class AuthController {
   @Public()
   @Post('login')
   @ApiOperation({ summary: 'Login with email/password' })
-  @ApiResponse({ status: 201, description: 'JWT returned', type: AuthSessionResponse })
+  @ApiResponse({ status: 201, description: 'JWT returned', type: AuthSessionDataResponse })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   login(@Body() body: LoginInput) {
     return this.auth.login(body)
@@ -34,7 +34,7 @@ export class AuthController {
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ status: 200, description: 'Current user profile', type: UserResponse })
+  @ApiResponse({ status: 200, description: 'Current user profile', type: UserDataResponse })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   me(@CurrentUser() user: JwtPayload) {
     return this.auth.me(user.sub)

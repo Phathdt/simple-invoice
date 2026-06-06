@@ -25,10 +25,10 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  AuthSessionResponse,
+  AuthSessionDataResponse,
   LoginInput,
   RegisterInput,
-  UserResponse
+  UserDataResponse
 } from '../models';
 
 import { axiosInstance } from '../../axios-instance';
@@ -45,7 +45,7 @@ export const authControllerRegister = (
 ) => {
 
 
-      return axiosInstance<AuthSessionResponse>(
+      return axiosInstance<AuthSessionDataResponse>(
       {url: `/auth/register`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: registerInput, signal
@@ -108,7 +108,7 @@ export const authControllerLogin = (
 ) => {
 
 
-      return axiosInstance<AuthSessionResponse>(
+      return axiosInstance<AuthSessionDataResponse>(
       {url: `/auth/login`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: loginInput, signal
@@ -171,7 +171,7 @@ export const authControllerMe = (
 ) => {
 
 
-      return axiosInstance<UserResponse>(
+      return axiosInstance<UserDataResponse>(
       {url: `/auth/me`, method: 'GET', signal
     },
       );
