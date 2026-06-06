@@ -33,3 +33,7 @@ plans
 # repomix snapshots
 repomix-output.*
 
+
+# e2e test artifacts
+apps/e2e/test-results/
+apps/e2e/.env

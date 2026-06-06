@@ -30,6 +30,7 @@ function LoginPage() {
                 type="email"
                 autoComplete="email"
                 placeholder="you@example.com"
+                data-testid="login-email"
                 className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10"
                 {...register('email')}
               />
@@ -52,6 +53,7 @@ function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 placeholder="••••••••"
+                data-testid="login-password"
                 className="w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10"
                 {...register('password')}
               />
@@ -66,7 +68,7 @@ function LoginPage() {
             </div>
 
             {isError && (
-              <div className="flex items-center gap-2 rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700">
+              <div data-testid="login-error" className="flex items-center gap-2 rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700">
                 <svg className="h-4 w-4 shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
                 </svg>
@@ -74,7 +76,7 @@ function LoginPage() {
               </div>
             )}
 
-            <Button type="submit" disabled={isPending} className="w-full">
+            <Button type="submit" disabled={isPending} data-testid="login-submit" className="w-full">
               {isPending ? (
                 <>
                   <Spinner />

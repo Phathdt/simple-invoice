@@ -47,13 +47,13 @@ function HomePage() {
         }
       />
 
-      <main className="mx-auto max-w-6xl p-4 sm:p-8">
+      <main className="mx-auto max-w-6xl p-4 sm:p-8" data-testid="invoice-list">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-slate-900">Invoices</h2>
             <p className="mt-0.5 text-sm text-slate-500">Manage and track your invoices</p>
           </div>
-          <Button onClick={openCreate}>
+          <Button onClick={openCreate} data-testid="invoice-create-btn">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
@@ -77,6 +77,7 @@ function HomePage() {
               placeholder="Search by invoice number or customer..."
               value={state.keyword}
               onChange={(e) => onKeyword(e.target.value)}
+              data-testid="invoice-search"
               className="w-full rounded-lg border border-slate-300 py-2.5 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10"
             />
           </div>
@@ -157,6 +158,7 @@ function HomePage() {
                   {invoices.map((invoice) => (
                     <tr
                       key={invoice.id}
+                      data-testid="invoice-row"
                       onClick={() => openInvoice(invoice.id)}
                       className="cursor-pointer border-b border-slate-100 transition-colors duration-150 last:border-0 hover:bg-slate-50"
                     >

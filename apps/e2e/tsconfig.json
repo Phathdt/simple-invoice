@@ -1,0 +1,15 @@
+{
+  "extends": "@simple-invoice/tsconfig/node.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["config/*"],
+      "@page-objects/*": ["page-objects/*"],
+      "@utils/*": ["utils/*"],
+      "@support/*": ["tests/support/*"]
+    }
+  },
+  "include": ["config/**/*", "page-objects/**/*", "tests/**/*", "utils/**/*"],
+  "exclude": ["node_modules", "dist", "test-results"]
+}

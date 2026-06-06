@@ -39,7 +39,7 @@ function CreateInvoicePage() {
           <TaxDiscountSection register={register} errors={errors} />
 
           {created && (
-            <div className="rounded-lg bg-green-50 px-3.5 py-3 text-sm text-green-700" role="status">
+            <div data-testid="create-success" className="rounded-lg bg-green-50 px-3.5 py-3 text-sm text-green-700" role="status">
               Invoice created successfully. Redirecting to the invoice list...
             </div>
           )}
@@ -52,7 +52,7 @@ function CreateInvoicePage() {
             <Button type="button" variant="secondary" onClick={goToList}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} data-testid="create-submit">
               {isPending ? (
                 <>
                   <Spinner />

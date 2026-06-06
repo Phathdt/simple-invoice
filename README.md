@@ -13,13 +13,19 @@ simple-invoice/
 │   │       ├── modules/
 │   │       │   ├── auth/   # JWT authentication
 │   │       │   ├── user/   # User management
-│   │       │   └── invoice/ # Invoice CRUD (in progress)
+│   │       │   └── invoice/ # Invoice CRUD
 │   │       └── main.ts
-│   └── frontend/          # React + Vite SPA
-│       └── src/
-│           ├── api/        # Orval-generated client (hooks + Zod) + Axios mutator
-│           ├── app.tsx
-│           └── main.tsx
+│   ├── frontend/          # React + Vite SPA
+│   │   └── src/
+│   │       ├── api/        # Orval-generated client (hooks + Zod) + Axios mutator
+│   │       ├── components/ # Shared UI (header, button, status badge)
+│   │       ├── hooks/      # Business logic (login, invoice list/detail/create, session)
+│   │       ├── routes/     # TanStack Router route components
+│   │       └── main.tsx
+│   └── e2e/               # Cucumber + Playwright end-to-end tests
+│       ├── config/         # Test + URL config
+│       ├── page-objects/   # Page object models (data-testid based)
+│       └── tests/          # Feature files + step definitions
 ├── packages/
 │   └── tsconfig/           # Shared TypeScript config
 ├── docs/
@@ -157,6 +163,28 @@ pnpm test:unit
 # Integration tests only (requires Docker for Testcontainers)
 pnpm test:integration
 ```
+
+### End-to-End Tests (Cucumber + Playwright)
+
+E2E tests live in `apps/e2e` and drive a real browser against the running app.
+
+```bash
+# One-time: install the Playwright browser
+pnpm --filter e2e install:browsers
+cp apps/e2e/.env.example apps/e2e/.env
+```
+
+With PostgreSQL seeded and both servers running (`pnpm dev:be`, `pnpm dev:fe`):
+
+```bash
+pnpm --filter e2e test            # run all scenarios (headless)
+pnpm --filter e2e test:headed     # run with a visible browser
+pnpm --filter e2e test:smoke      # @smoke scenarios only
+pnpm --filter e2e test:auth       # @auth scenarios only
+pnpm --filter e2e test:invoice    # @invoice scenarios only
+```
+
+Page objects use `data-testid` selectors; failing scenarios save a Playwright trace under `apps/e2e/test-results/traces/`.
 
 ## Available Scripts
 

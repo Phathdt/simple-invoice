@@ -2,7 +2,7 @@
 
 ## Project
 
-SimpleInvoice — pnpm + Turborepo monorepo. `apps/backend` (NestJS) and `apps/frontend` (React + Vite) are both active.
+SimpleInvoice — pnpm + Turborepo monorepo. `apps/backend` (NestJS), `apps/frontend` (React + Vite), and `apps/e2e` (Cucumber + Playwright) are all active.
 
 ## Commands
 
@@ -23,6 +23,8 @@ pnpm --filter backend prisma:migrate      # run Prisma migrations
 pnpm --filter backend prisma:seed         # seed DB
 pnpm --filter backend prisma:generate     # regenerate Prisma client
 pnpm --filter backend type-check          # tsc --noEmit
+pnpm --filter e2e test                    # run Cucumber + Playwright e2e (servers must be up)
+pnpm --filter e2e install:browsers        # install Playwright chromium (one-time)
 ```
 
 ## Stack
@@ -79,9 +81,15 @@ apps/frontend/src/
 │       ├── models/            # TS interfaces per DTO
 │       ├── <tag>/<tag>.ts     # React Query hooks + Axios fns + query keys
 │       └── <tag>/<tag>.zod.ts # Zod validation schemas per tag
-├── app.tsx                    # QueryClientProvider root
+├── components/                # Shared presentational UI (app-header, button, status-badge)
+├── hooks/                     # Business logic per screen (use-login, use-invoice-list, etc.)
+├── lib/                       # auth token helpers
+├── routes/                    # TanStack Router route components (presentational)
 └── main.tsx
 ```
+
+- Route components stay presentational; screen logic (state, mutations, navigation) lives in `src/hooks/*`.
+- `use-session-validation` calls `GET /auth/me` on app load to validate the persisted token on refresh.
 
 ## API Client Pipeline (type-safe, generated)
 
@@ -115,10 +123,34 @@ NestJS (@nestjs/swagger + nestjs-zod) → docs/openapi.yaml → Orval → React 
 - Config: `apps/backend/prisma.config.ts`
 - Seed users: `*@simple-invoice.dev` / `password123` (alice, bob, carol, dave, eve)
 
+## E2E Tests
+
+`apps/e2e` — Cucumber + Playwright, Page Object Model.
+
+```
+apps/e2e/
+├── config/         # test.config.ts (presets), urls.config.ts (routes + REST API)
+├── page-objects/   # one class per screen; selectors use data-testid
+├── tests/
+│   ├── features/   # *.feature (Gherkin) + *.steps.ts per scenario group
+│   └── support/    # world.ts, browser-hooks.ts, api-helpers.ts (REST setup)
+└── utils/          # browser-factory.ts, logger.ts
+```
+
+- Selectors use `data-testid` on the frontend; form fields fall back to `[name="..."]`.
+- API setup (login, seed invoice) goes through REST helpers in `tests/support/api-helpers.ts`.
+- Requires backend (`:4000`) + frontend (`:5173`) running and the DB seeded.
+- Run the browser install once: `pnpm --filter e2e install:browsers`.
+
+## Health Check
+
+- `GET /health` is a `@Public()` endpoint returning `{ status: 'ok' }`.
+- Used by the Docker Compose backend healthcheck.
+
 ## Docker
 
 `docker compose up` starts postgres + backend + frontend.
 
-Backend Dockerfile CMD: `prisma migrate deploy && node dist/main.cjs`
+Backend Dockerfile CMD: `prisma migrate deploy && node dist/main.cjs`. Frontend builds a static SPA served by nginx (`apps/frontend/Dockerfile` + `nginx.conf`); the build bakes in `VITE_API_BASE_URL` (default `http://localhost:4000`).
 
 Ports: backend `4000`, postgres `5432`, frontend `8080`.

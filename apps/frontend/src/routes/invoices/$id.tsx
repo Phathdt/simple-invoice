@@ -44,7 +44,7 @@ function InvoiceDetailPage() {
           <div className="space-y-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-2xl font-bold tracking-tight text-slate-900">{invoice.invoiceNumber}</h2>
+                <h2 data-testid="detail-invoice-number" className="text-2xl font-bold tracking-tight text-slate-900">{invoice.invoiceNumber}</h2>
                 {invoice.invoiceReference && (
                   <p className="mt-0.5 text-sm text-slate-500">Reference: {invoice.invoiceReference}</p>
                 )}
