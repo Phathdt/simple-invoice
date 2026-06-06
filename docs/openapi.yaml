@@ -62,6 +62,132 @@ paths:
       summary: Get current user profile
       tags:
         - auth
+  /invoices:
+    post:
+      operationId: InvoiceController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceInput'
+      responses:
+        '201':
+          description: Invoice created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDetailDataResponse'
+        '409':
+          description: Invoice number already exists
+      security:
+        - bearer: []
+      summary: Create a new invoice
+      tags:
+        - invoices
+    get:
+      operationId: InvoiceController_list
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            maximum: 9007199254740991
+            exclusiveMinimum: true
+            default: 1
+            type: integer
+            minimum: 0
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            maximum: 100
+            exclusiveMinimum: true
+            default: 10
+            type: integer
+            minimum: 0
+        - name: sortBy
+          required: false
+          in: query
+          schema:
+            default: createdAt
+            type: string
+            enum:
+              - invoiceDate
+              - dueDate
+              - totalAmount
+              - createdAt
+        - name: ordering
+          required: false
+          in: query
+          schema:
+            default: DESC
+            type: string
+            enum:
+              - ASC
+              - DESC
+        - name: status
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: keyword
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: fromDate
+          required: false
+          in: query
+          schema:
+            format: date
+            pattern: >-
+              ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+            type: string
+        - name: toDate
+          required: false
+          in: query
+          schema:
+            format: date
+            pattern: >-
+              ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+            type: string
+      responses:
+        '200':
+          description: Paginated invoice list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceListDataResponse'
+      security:
+        - bearer: []
+      summary: List invoices with search, filter, sort, pagination
+      tags:
+        - invoices
+  /invoices/{id}:
+    get:
+      operationId: InvoiceController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDetailDataResponse'
+        '404':
+          description: Invoice not found
+      security:
+        - bearer: []
+      summary: Get invoice detail by ID
+      tags:
+        - invoices
 info:
   title: SimpleInvoice API
   description: SimpleInvoice REST API
@@ -154,3 +280,283 @@ components:
             - createdAt
       required:
         - data
+    CreateInvoiceInput:
+      type: object
+      properties:
+        invoiceNumber:
+          type: string
+          minLength: 1
+        invoiceReference:
+          type: string
+        invoiceDate:
+          type: string
+          format: date
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+        dueDate:
+          type: string
+          format: date
+          pattern: >-
+            ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))$
+        currency:
+          type: string
+          minLength: 1
+        currencySymbol:
+          type: string
+          minLength: 1
+        description:
+          type: string
+        customerName:
+          type: string
+          minLength: 1
+        customerEmail:
+          type: string
+          format: email
+          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+        customerMobile:
+          type: string
+        customerAddress:
+          type: string
+        items:
+          minItems: 1
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+              quantity:
+                type: integer
+                exclusiveMinimum: true
+                maximum: 9007199254740991
+                minimum: 0
+              rate:
+                type: number
+                exclusiveMinimum: true
+                minimum: 0
+            required:
+              - name
+              - quantity
+              - rate
+        tax:
+          default: 10
+          type: number
+          minimum: 0
+        discount:
+          default: 0
+          type: number
+          minimum: 0
+      required:
+        - invoiceNumber
+        - invoiceDate
+        - dueDate
+        - currency
+        - currencySymbol
+        - customerName
+        - customerEmail
+        - items
+    InvoiceDetailDataResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            invoiceNumber:
+              type: string
+            invoiceReference:
+              type: string
+              nullable: true
+            invoiceDate:
+              type: string
+            dueDate:
+              type: string
+            currency:
+              type: string
+            currencySymbol:
+              type: string
+            description:
+              type: string
+              nullable: true
+            status:
+              type: string
+            customerName:
+              type: string
+            customerEmail:
+              type: string
+            customerMobile:
+              type: string
+              nullable: true
+            customerAddress:
+              type: string
+              nullable: true
+            taxRate:
+              type: number
+            invoiceSubTotal:
+              type: number
+            totalTax:
+              type: number
+            totalDiscount:
+              type: number
+            totalAmount:
+              type: number
+            totalPaid:
+              type: number
+            balanceAmount:
+              type: number
+            createdBy:
+              type: string
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  quantity:
+                    type: number
+                  rate:
+                    type: number
+                required:
+                  - id
+                  - name
+                  - quantity
+                  - rate
+            createdAt:
+              type: string
+          required:
+            - id
+            - invoiceNumber
+            - invoiceDate
+            - dueDate
+            - currency
+            - currencySymbol
+            - status
+            - customerName
+            - customerEmail
+            - taxRate
+            - invoiceSubTotal
+            - totalTax
+            - totalDiscount
+            - totalAmount
+            - totalPaid
+            - balanceAmount
+            - createdBy
+            - items
+            - createdAt
+      required:
+        - data
+    InvoiceListDataResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              invoiceNumber:
+                type: string
+              invoiceReference:
+                type: string
+                nullable: true
+              invoiceDate:
+                type: string
+              dueDate:
+                type: string
+              currency:
+                type: string
+              currencySymbol:
+                type: string
+              description:
+                type: string
+                nullable: true
+              status:
+                type: string
+              customerName:
+                type: string
+              customerEmail:
+                type: string
+              customerMobile:
+                type: string
+                nullable: true
+              customerAddress:
+                type: string
+                nullable: true
+              taxRate:
+                type: number
+              invoiceSubTotal:
+                type: number
+              totalTax:
+                type: number
+              totalDiscount:
+                type: number
+              totalAmount:
+                type: number
+              totalPaid:
+                type: number
+              balanceAmount:
+                type: number
+              createdBy:
+                type: string
+              items:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    quantity:
+                      type: number
+                    rate:
+                      type: number
+                  required:
+                    - id
+                    - name
+                    - quantity
+                    - rate
+              createdAt:
+                type: string
+            required:
+              - id
+              - invoiceNumber
+              - invoiceDate
+              - dueDate
+              - currency
+              - currencySymbol
+              - status
+              - customerName
+              - customerEmail
+              - taxRate
+              - invoiceSubTotal
+              - totalTax
+              - totalDiscount
+              - totalAmount
+              - totalPaid
+              - balanceAmount
+              - createdBy
+              - items
+              - createdAt
+        paging:
+          type: object
+          properties:
+            page:
+              type: number
+            pageSize:
+              type: number
+            total:
+              type: number
+          required:
+            - page
+            - pageSize
+            - total
+      required:
+        - data
+        - paging

@@ -6,6 +6,7 @@ import { LoggerModule } from 'nestjs-pino'
 import { loggerConfig } from './logger.config'
 import { CommonModule } from './common/common.module'
 import { AuthModule } from './modules/auth/auth.module'
+import { InvoiceModule } from './modules/invoice/invoice.module'
 import { PrismaModule } from './modules/prisma/prisma.module'
 import { UserModule } from './modules/user/user.module'
 
@@ -17,6 +18,7 @@ import { UserModule } from './modules/user/user.module'
     PrismaModule,
     UserModule,
     AuthModule,
+    InvoiceModule,
   ],
 })
 export class AppModule {}
