@@ -1,0 +1,55 @@
+{
+  "name": "simple-invoice",
+  "private": true,
+  "packageManager": "pnpm@10.33.3",
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:be": "pnpm --filter backend dev",
+    "dev:fe": "pnpm --filter frontend dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit",
+    "test:integration": "turbo run test:integration",
+    "generate": "turbo run generate",
+    "typecheck": "turbo run type-check",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "repomix": "repomix",
+    "repomix:lean": "repomix --ignore \"**/*.spec.ts,**/*.test.ts,**/*.test.tsx,**/*.integration.spec.ts,**/test/**,**/test-utils/**\" -o repomix-output.lean.xml",
+    "format": "prettier --write \"**/*.{ts,tsx,js,cjs,mjs,json,md,yml,yaml,graphql}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,cjs,mjs,json,md,yml,yaml,graphql}\"",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:logs": "docker compose logs -f backend frontend",
+    "prepare": "lefthook install"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "lefthook": "^2.1.6",
+    "oxlint": "^1.63.0",
+    "prettier": "^3.8.3",
+    "turbo": "^2.9.9",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^5.9.3"
+    },
+    "onlyBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "cpu-features",
+      "esbuild",
+      "lefthook",
+      "prisma",
+      "protobufjs",
+      "ssh2"
+    ]
+  }
+}

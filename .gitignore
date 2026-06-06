@@ -1,0 +1,35 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+
+# env
+.env
+.env.local
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# editor
+.DS_Store
+.vscode/*
+!.vscode/settings.json
+.idea
+
+# generated
+apps/frontend/src/generated
+apps/backend/prisma/generated
+
+# claude
+.claude_sessions/
+plans
+
+**/coverage*
+
+# repomix snapshots
+repomix-output.*
+

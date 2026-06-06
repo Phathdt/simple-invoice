@@ -1,0 +1,51 @@
+import swc from 'unplugin-swc'
+import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  plugins: [tsconfigPaths(), swc.vite({ module: { type: 'es6' } })],
+  test: {
+    globals: true,
+    environment: 'node',
+    include: ['src/**/*.spec.ts', 'src/**/*.test.ts'],
+    exclude: ['src/**/*.integration.spec.ts', 'node_modules', 'dist'],
+    testTimeout: 60_000,
+    hookTimeout: 120_000,
+    pool: 'forks',
+    forks: { singleFork: true },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'text-summary', 'html', 'json-summary'],
+      reportsDirectory: './coverage',
+      include: ['src/modules/**/*.ts'],
+      exclude: [
+        'src/**/*.spec.ts',
+        'src/**/*.test.ts',
+        'src/**/*.integration.spec.ts',
+        'src/**/*.module.ts',
+        'src/**/*.entity.ts',
+        'src/**/*.model.ts',
+        'src/**/*.models.ts',
+        'src/**/dto/**',
+        'src/**/domain/dto/**',
+        'src/**/domain/errors.ts',
+        'src/**/*.resolver.ts',
+        'src/**/infrastructure/resolvers/**',
+        'src/**/infrastructure/gql-auth.guard.ts',
+        'src/**/infrastructure/current-user.decorator.ts',
+        'src/main.ts',
+        'src/app.module.ts',
+        'src/app.resolver.ts',
+        'src/logger.config.ts',
+        'src/modules/graphql/**',
+        'src/common/**',
+      ],
+      thresholds: {
+        statements: 80,
+        branches: 75,
+        functions: 80,
+        lines: 80,
+      },
+    },
+  },
+})

@@ -1,0 +1,162 @@
+# SimpleInvoice
+
+A full-stack invoice management application built with NestJS (backend) and ReactJS (frontend), organized as a pnpm + Turborepo monorepo.
+
+## Architecture
+
+```
+simple-invoice/
+├── apps/
+│   └── backend/           # NestJS REST API
+│       ├── prisma/         # Schema, migrations, seed
+│       └── src/
+│           ├── modules/
+│           │   ├── auth/   # JWT authentication
+│           │   ├── user/   # User management
+│           │   └── invoice/ # Invoice CRUD (in progress)
+│           └── main.ts
+├── packages/
+│   └── tsconfig/           # Shared TypeScript config
+├── docker-compose.yml
+└── README.md
+```
+
+The backend follows a layered DDD-style architecture per module:
+
+- **domain/** — interfaces, DTOs, errors (no framework dependencies)
+- **application/services/** — business logic
+- **infrastructure/** — Prisma repositories, HTTP controllers
+
+## Prerequisites
+
+- Node.js 20+
+- pnpm 10+
+- Docker & Docker Compose (for the containerized setup)
+
+## Running Locally (without Docker)
+
+### 1. Start PostgreSQL
+
+```bash
+pnpm db:up
+```
+
+### 2. Install dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Configure environment
+
+```bash
+cp apps/backend/.env.example apps/backend/.env
+```
+
+Minimum required variables:
+
+```env
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/simple-invoice
+JWT_SECRET=dev-secret
+PORT=4000
+```
+
+### 4. Run database migrations
+
+```bash
+pnpm --filter backend prisma:migrate
+```
+
+### 5. Seed the database
+
+```bash
+pnpm --filter backend prisma:seed
+```
+
+### 6. Start the backend
+
+```bash
+pnpm dev:be
+```
+
+API available at `http://localhost:4000`.  
+Swagger UI at `http://localhost:4000/api/docs`.
+
+## Running with Docker
+
+```bash
+docker compose up
+```
+
+Starts PostgreSQL, the backend, and the frontend (once available) in a single command.
+
+| Service  | URL                            |
+| -------- | ------------------------------ |
+| Backend  | http://localhost:4000          |
+| Swagger  | http://localhost:4000/api/docs |
+| Frontend | http://localhost:8080          |
+| Postgres | localhost:5432                 |
+
+The Docker build runs `prisma migrate deploy` automatically on startup. To seed after startup:
+
+```bash
+docker compose exec backend pnpm prisma:seed
+```
+
+## Default Login Credentials
+
+The seed script creates the following accounts (all share the same password):
+
+| Email                    | Password    |
+| ------------------------ | ----------- |
+| alice@simple-invoice.dev | password123 |
+| bob@simple-invoice.dev   | password123 |
+| carol@simple-invoice.dev | password123 |
+| dave@simple-invoice.dev  | password123 |
+| eve@simple-invoice.dev   | password123 |
+
+## Running Tests
+
+```bash
+# All tests
+pnpm test
+
+# Unit tests only
+pnpm test:unit
+
+# Integration tests only (requires Docker for Testcontainers)
+pnpm test:integration
+```
+
+## Available Scripts
+
+| Command                                | Description                     |
+| -------------------------------------- | ------------------------------- |
+| `pnpm dev:be`                          | Start backend in watch mode     |
+| `pnpm build`                           | Build all packages              |
+| `pnpm test`                            | Run all tests                   |
+| `pnpm lint`                            | Lint with oxlint                |
+| `pnpm format`                          | Format with Prettier            |
+| `pnpm db:up`                           | Start PostgreSQL container      |
+| `pnpm db:down`                         | Stop PostgreSQL container       |
+| `pnpm --filter backend prisma:migrate` | Run Prisma migrations           |
+| `pnpm --filter backend prisma:seed`    | Seed the database               |
+| `pnpm --filter backend prisma:studio`  | Open Prisma Studio              |
+
+## Design Decisions
+
+- **Monorepo** with pnpm workspaces and Turborepo for task orchestration and build caching.
+- **DDD-style layering** per module: domain interfaces stay framework-agnostic; infrastructure holds Prisma and HTTP adapters.
+- **Zod validation** via `nestjs-zod` instead of `class-validator` — better type inference and composability with TypeScript.
+- **Customer embedded on Invoice** — no separate `customers` table; simplifies queries for a single-owner invoice context.
+- **Overdue is derived, not stored** — computed at read time: `status != Paid AND dueDate < today`. Only `Draft`, `Pending`, and `Paid` are persisted.
+- **JWT stateless auth** — no refresh tokens for this scope; expiry configurable via `JWT_EXPIRES_IN` env var (default 3600 s).
+- **Vitest** over Jest — faster, native ESM support, compatible with the SWC transform already in use.
+- **Testcontainers** for integration tests — spins up a real PostgreSQL instance; no mocks at the database layer.
+
+## Known Limitations
+
+- `apps/frontend` is not yet implemented; the `docker-compose.yml` frontend service will fail to build until the app is added.
+- The invoice module (list, detail, create endpoints) is not yet implemented — only authentication and user management are complete.
+- No refresh token mechanism; sessions expire after the configured TTL.
+- Password reset and email verification are out of scope for this assessment.
