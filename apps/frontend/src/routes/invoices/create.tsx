@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { createRoute, redirect, useNavigate } from '@tanstack/react-router'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { useInvoiceControllerCreate } from '@/api/generated/invoices/invoices'
 import { AppHeader } from '@/components/app-header'
@@ -11,7 +12,7 @@ import { Route as rootRoute } from '../__root'
 import {
   CustomerSection,
   InvoiceDetailsSection,
-  ItemsSection,
+  ItemSection,
   TaxDiscountSection,
 } from './create-invoice-form-sections'
 import { type CreateInvoiceForm, createInvoiceSchema } from './create-invoice-form-schema'
@@ -19,18 +20,16 @@ import { type CreateInvoiceForm, createInvoiceSchema } from './create-invoice-fo
 function CreateInvoicePage() {
   const navigate = useNavigate()
   const create = useInvoiceControllerCreate()
+  const [created, setCreated] = useState(false)
 
   const {
     register,
-    control,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateInvoiceForm>({
     resolver: zodResolver(createInvoiceSchema),
     defaultValues: { items: [{ name: '', quantity: 1, rate: 0 }], tax: 10, discount: 0 },
   })
-
-  const fieldArray = useFieldArray({ control, name: 'items' })
 
   const onSubmit = (data: CreateInvoiceForm) => {
     create.mutate(
@@ -52,7 +51,12 @@ function CreateInvoicePage() {
           discount: data.discount as number | undefined,
         },
       },
-      { onSuccess: () => navigate({ to: '/' }) },
+      {
+        onSuccess: () => {
+          setCreated(true)
+          window.setTimeout(() => navigate({ to: '/' }), 700)
+        },
+      },
     )
   }
 
@@ -75,8 +79,14 @@ function CreateInvoicePage() {
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
           <InvoiceDetailsSection register={register} errors={errors} />
           <CustomerSection register={register} errors={errors} />
-          <ItemsSection register={register} errors={errors} fieldArray={fieldArray} />
+          <ItemSection register={register} errors={errors} />
           <TaxDiscountSection register={register} errors={errors} />
+
+          {created && (
+            <div className="rounded-lg bg-green-50 px-3.5 py-3 text-sm text-green-700" role="status">
+              Invoice created successfully. Redirecting to the invoice list...
+            </div>
+          )}
 
           {create.isError && (
             <div className="rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700">

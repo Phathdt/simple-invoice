@@ -107,12 +107,9 @@ describe('Create invoice page', () => {
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/' })
   })
 
-  it('can add and remove items', async () => {
-    const user = userEvent.setup()
+  it('implements exactly one line item for this assessment', async () => {
     await renderCreate()
-    const addBtn = screen.getByText('+ Add item')
-    await user.click(addBtn)
-    const nameInputs = screen.getAllByPlaceholderText('Item name')
-    expect(nameInputs).toHaveLength(2)
+    expect(screen.getAllByPlaceholderText('Item name')).toHaveLength(1)
+    expect(screen.queryByText('+ Add item')).not.toBeInTheDocument()
   })
 })

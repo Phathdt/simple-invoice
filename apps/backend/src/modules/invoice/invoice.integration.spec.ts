@@ -85,6 +85,14 @@ describe('Invoice (integration)', () => {
     expect(res.status).toBe(409)
   })
 
+  it('POST /invoices requires exactly one line item', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/invoices')
+      .set(auth())
+      .send({ ...validInvoice(), items: [{ name: 'A', quantity: 1, rate: 100 }, { name: 'B', quantity: 1, rate: 50 }] })
+    expect(res.status).toBe(400)
+  })
+
   it('POST /invoices without token returns 401', async () => {
     const res = await request(app.getHttpServer()).post('/invoices').send(validInvoice())
     expect(res.status).toBe(401)

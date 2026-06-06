@@ -186,7 +186,6 @@ pnpm test:integration
 
 ## Known Limitations
 
-- `apps/frontend` is scaffolded (Vite + React + Orval client pipeline) but the UI screens (login, invoice list/detail/create) are not yet implemented.
-- The invoice module (list, detail, create endpoints) is not yet implemented — only authentication and user management are complete.
 - No refresh token mechanism; sessions expire after the configured TTL.
-- Password reset and email verification are out of scope for this assessment.
+- Password reset, email verification, and multi-factor authentication are out of scope for this assessment.
+- Invoice creation implements exactly one line item, as required by the assessment, while the database schema remains ready for multiple items in the future.

@@ -19,7 +19,7 @@ export const createInvoiceSchema = z
     customerEmail: z.email('Invalid email'),
     customerMobile: z.string().optional(),
     customerAddress: z.string().optional(),
-    items: z.array(itemSchema).min(1, 'At least one item required'),
+    items: z.array(itemSchema).length(1, 'Exactly one item is required'),
     tax: z.number().min(0).optional(),
     discount: z.number().min(0).optional(),
   })

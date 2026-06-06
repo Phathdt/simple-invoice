@@ -85,26 +85,16 @@ describe('InvoiceService', () => {
       expect(captured?.balanceAmount).toBe(170)
     })
 
-    it('sums totals across multiple items', async () => {
+    it('computes totals for the single assessment line item', async () => {
       let captured: CreateInvoiceData | undefined
       vi.mocked(repo.create).mockImplementation(async (d) => {
         captured = d
         return persisted(d)
       })
 
-      await service.create(
-        buildInput({
-          items: [
-            { name: 'A', quantity: 2, rate: 100 },
-            { name: 'B', quantity: 1, rate: 50 },
-          ],
-          tax: 0,
-        }),
-        'user-1',
-      )
-      // subTotal = 200 + 50 = 250; tax 0; total 250
-      expect(captured?.invoiceSubTotal).toBe(250)
-      expect(captured?.totalAmount).toBe(250)
+      await service.create(buildInput({ items: [{ name: 'A', quantity: 3, rate: 100 }], tax: 0 }), 'user-1')
+      expect(captured?.invoiceSubTotal).toBe(300)
+      expect(captured?.totalAmount).toBe(300)
     })
 
     it('always sets status=Draft and totalPaid=0, createdBy from userId', async () => {

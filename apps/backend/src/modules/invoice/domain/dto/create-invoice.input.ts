@@ -27,7 +27,7 @@ export const createInvoiceSchema = z
     customerMobile: z.string().optional(),
     customerAddress: z.string().optional(),
 
-    items: z.array(itemSchema).min(1),
+    items: z.array(itemSchema).length(1),
     tax: z.number().min(0).default(10),
     discount: z.number().min(0).default(0),
   })

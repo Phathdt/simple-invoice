@@ -1,11 +1,10 @@
 import type { ReactNode } from 'react'
-import type { FieldErrors, UseFieldArrayReturn, UseFormRegister } from 'react-hook-form'
+import type { FieldErrors, UseFormRegister } from 'react-hook-form'
 
 import type { CreateInvoiceForm } from './create-invoice-form-schema'
 
 type FormRegister = UseFormRegister<CreateInvoiceForm>
 type FormErrors = FieldErrors<CreateInvoiceForm>
-type ItemArray = UseFieldArrayReturn<CreateInvoiceForm, 'items'>
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
@@ -82,38 +81,20 @@ export function CustomerSection({ register, errors }: { register: FormRegister; 
   )
 }
 
-export function ItemsSection({ register, errors, fieldArray }: { register: FormRegister; errors: FormErrors; fieldArray: ItemArray }) {
-  const { fields, append, remove } = fieldArray
+export function ItemSection({ register, errors }: { register: FormRegister; errors: FormErrors }) {
   return (
-    <FormSection title="Items">
-      <div className="-mt-8 mb-4 flex justify-end">
-        <button
-          type="button"
-          onClick={() => append({ name: '', quantity: 1, rate: 0 })}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold text-blue-600 transition-colors duration-150 hover:bg-blue-50 focus:outline-none focus:ring-3 focus:ring-blue-500/20"
-        >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-          </svg>
-          + Add item
-        </button>
-      </div>
+    <FormSection title="Item">
       {errors.items?.root && <p className="mb-2 text-xs text-red-600">{errors.items.root.message}</p>}
-      <div className="space-y-3">
-        {fields.map((field, i) => (
-          <div key={field.id} className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_5rem_7rem_2.75rem]">
-            <ItemInput error={errors.items?.[i]?.name?.message}>
-              <input {...register(`items.${i}.name`)} placeholder="Item name" className={inputCls} />
-            </ItemInput>
-            <ItemInput error={errors.items?.[i]?.quantity?.message}>
-              <input type="number" {...register(`items.${i}.quantity`, { valueAsNumber: true })} placeholder="Qty" className={inputCls} />
-            </ItemInput>
-            <ItemInput error={errors.items?.[i]?.rate?.message}>
-              <input type="number" step="0.01" {...register(`items.${i}.rate`, { valueAsNumber: true })} placeholder="Rate" className={inputCls} />
-            </ItemInput>
-            {fields.length > 1 && <RemoveItemButton onClick={() => remove(i)} />}
-          </div>
-        ))}
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_5rem_7rem]">
+        <ItemInput error={errors.items?.[0]?.name?.message}>
+          <input {...register('items.0.name')} placeholder="Item name" className={inputCls} />
+        </ItemInput>
+        <ItemInput error={errors.items?.[0]?.quantity?.message}>
+          <input type="number" {...register('items.0.quantity', { valueAsNumber: true })} placeholder="Qty" className={inputCls} />
+        </ItemInput>
+        <ItemInput error={errors.items?.[0]?.rate?.message}>
+          <input type="number" step="0.01" {...register('items.0.rate', { valueAsNumber: true })} placeholder="Rate" className={inputCls} />
+        </ItemInput>
       </div>
     </FormSection>
   )
@@ -125,21 +106,6 @@ function ItemInput({ error, children }: { error?: string; children: ReactNode })
       {children}
       {error && <p className="mt-1.5 text-xs text-red-600">{error}</p>}
     </div>
-  )
-}
-
-function RemoveItemButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      aria-label="Remove item"
-      onClick={onClick}
-      className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg text-red-500 transition-colors duration-150 hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-3 focus:ring-red-500/20"
-    >
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
   )
 }
 
