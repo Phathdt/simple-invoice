@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { LoggerModule } from 'nestjs-pino'
 
-import { loggerConfig } from './logger.config'
+import { buildLoggerConfig } from './logger.config'
 import { CommonModule } from './common/common.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { InvoiceModule } from './modules/invoice/invoice.module'
@@ -13,7 +13,10 @@ import { UserModule } from './modules/user/user.module'
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    LoggerModule.forRoot(loggerConfig),
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => buildLoggerConfig(config),
+    }),
     CommonModule,
     PrismaModule,
     UserModule,

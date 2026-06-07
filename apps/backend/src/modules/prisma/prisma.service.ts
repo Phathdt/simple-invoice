@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 import { PrismaClient } from '../../generated/prisma/client'
@@ -13,29 +14,33 @@ interface PrismaQueryEvent {
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   private readonly sqlLogger = new Logger('PrismaSQL')
+  private readonly isProd: boolean
+  private readonly logSql: boolean
 
-  constructor() {
+  constructor(config: ConfigService) {
+    const isProd = config.get<string>('NODE_ENV') === 'production'
     const adapter = new PrismaPg({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: config.get<string>('DATABASE_URL'),
     })
     super({
       adapter,
-      log:
-        process.env.NODE_ENV === 'production'
-          ? ['error']
-          : [
-              { emit: 'event', level: 'query' },
-              { emit: 'stdout', level: 'warn' },
-              { emit: 'stdout', level: 'error' },
-            ],
+      log: isProd
+        ? ['error']
+        : [
+            { emit: 'event', level: 'query' },
+            { emit: 'stdout', level: 'warn' },
+            { emit: 'stdout', level: 'error' },
+          ],
     })
+    this.isProd = isProd
+    this.logSql = config.get<string>('LOG_SQL') === '1'
   }
 
   async onModuleInit() {
     // @ts-expect-error — generated client types $on with the runtime log config
     this.$on('query', (e: PrismaQueryEvent) => {
       incrementQueryCount()
-      if (process.env.NODE_ENV === 'production' && process.env.LOG_SQL !== '1') return
+      if (this.isProd && !this.logSql) return
 
       const stats = requestContext.getStore()
       const seq = stats ? `#${stats.queryCount}` : ''

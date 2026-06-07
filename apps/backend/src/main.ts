@@ -1,6 +1,7 @@
 import 'dotenv/config'
 
 import { NestFactory } from '@nestjs/core'
+import { ConfigService } from '@nestjs/config'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ZodValidationPipe, cleanupOpenApiDoc } from 'nestjs-zod'
 
@@ -24,6 +25,8 @@ async function bootstrap() {
   const document = cleanupOpenApiDoc(SwaggerModule.createDocument(app, config))
   SwaggerModule.setup('api/docs', app, document)
 
-  await app.listen(process.env.PORT ?? 4000)
+  const configService = app.get(ConfigService)
+  const port = configService.get<number>('PORT') ?? 4000
+  await app.listen(port)
 }
 bootstrap()
