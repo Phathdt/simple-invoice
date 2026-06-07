@@ -125,7 +125,7 @@ Swagger UI at `http://localhost:4000/api/docs`.
 pnpm dev:fe
 ```
 
-Frontend dev server at `http://localhost:5173` (proxies `/api` to the backend on port 4000).
+Frontend dev server at `http://localhost:5173`.
 
 ## Type-Safe API Client (Orval)
 
