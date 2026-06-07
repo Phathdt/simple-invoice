@@ -142,6 +142,12 @@ describe('InvoiceService', () => {
         service.create(buildInput({ currency: 'XYZ', currencySymbol: '?' }), 'user-1'),
       ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
     })
+
+    it('rejects Object.prototype keys as currency (no rate poisoning)', async () => {
+      await expect(
+        service.create(buildInput({ currency: 'toString', currencySymbol: '?' }), 'user-1'),
+      ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
+    })
   })
 
   describe('findById', () => {

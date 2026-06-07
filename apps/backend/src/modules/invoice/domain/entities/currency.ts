@@ -36,5 +36,9 @@ export const EXCHANGE_RATES_TO_USD: Record<CurrencyCode, number> = {
 }
 
 export function rateToBase(code: string): number | undefined {
-  return EXCHANGE_RATES_TO_USD[code as CurrencyCode]
+  // Own-property guard: a bare lookup would return Object.prototype members
+  // (e.g. rateToBase('toString')) and poison `amount * rate` into NaN.
+  return Object.prototype.hasOwnProperty.call(EXCHANGE_RATES_TO_USD, code)
+    ? EXCHANGE_RATES_TO_USD[code as CurrencyCode]
+    : undefined
 }
