@@ -24,15 +24,22 @@ const ZERO_DECIMAL_CURRENCIES = new Set<string>(['VND', 'JPY'])
 // Currencies that display the symbol after the amount (e.g. 1.109.961 ₫).
 const SUFFIX_SYMBOL_CURRENCIES = new Set<string>(['VND'])
 
+// Locale used for number grouping per currency (VND uses dot separators).
+const CURRENCY_LOCALES: Record<string, string> = {
+  VND: 'vi-VN',
+}
+
 function fractionDigits(code: string): number {
   return ZERO_DECIMAL_CURRENCIES.has(code) ? 0 : 2
 }
 
 // Formats an amount using the persisted symbol, the currency's decimal rules
-// (e.g. VND/JPY have no decimals), and symbol placement (VND trails the amount).
+// (e.g. VND/JPY have no decimals), locale-aware grouping, and symbol placement
+// (VND trails the amount).
 export function formatMoney(amount: number, currency: string, symbol: string): string {
   const digits = fractionDigits(currency)
-  const formatted = amount.toLocaleString('en-US', {
+  const locale = CURRENCY_LOCALES[currency] ?? 'en-US'
+  const formatted = amount.toLocaleString(locale, {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   })

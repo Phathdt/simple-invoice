@@ -7,8 +7,8 @@ describe('formatMoney', () => {
     expect(formatMoney(1109961.15, 'USD', '$')).toBe('$1,109,961.15')
   })
 
-  it('uses no decimals and a trailing symbol for VND', () => {
-    expect(formatMoney(1109961.15, 'VND', '₫')).toBe('1,109,961 ₫')
+  it('uses no decimals, dot grouping, and a trailing symbol for VND', () => {
+    expect(formatMoney(1109961.15, 'VND', '₫')).toBe('1.109.961 ₫')
   })
 
   it('uses no decimals for JPY', () => {
