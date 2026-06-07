@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { emailSchema } from '@/lib/validation'
+
 const itemSchema = z.object({
   name: z.string().min(1, 'Required'),
   quantity: z.number().int().positive('Must be > 0'),
@@ -16,7 +18,7 @@ export const createInvoiceSchema = z
     currencySymbol: z.string().min(1, 'Required'),
     description: z.string().optional(),
     customerName: z.string().min(1, 'Required'),
-    customerEmail: z.email('Invalid email'),
+    customerEmail: emailSchema,
     customerMobile: z.string().optional(),
     customerAddress: z.string().optional(),
     items: z.array(itemSchema).length(1, 'Exactly one item is required'),

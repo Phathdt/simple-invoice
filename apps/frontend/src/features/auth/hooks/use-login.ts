@@ -5,9 +5,10 @@ import { z } from 'zod'
 
 import { useAuthControllerLogin } from '@/api/generated/auth/auth'
 import { setToken } from '@/lib/auth'
+import { emailSchema } from '@/lib/validation'
 
 export const loginSchema = z.object({
-  email: z.email('Invalid email'),
+  email: emailSchema,
   password: z.string().min(6, 'Password must be at least 6 characters'),
 })
 export type LoginForm = z.infer<typeof loginSchema>

@@ -1,6 +1,8 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
+import { emailSchema } from '../../../../common/dto/email.schema'
+
 const itemSchema = z.object({
   name: z.string().min(1),
   quantity: z.number().int().positive(),
@@ -23,7 +25,7 @@ export const createInvoiceSchema = z
     description: z.string().optional(),
 
     customerName: z.string().min(1),
-    customerEmail: z.string().email(),
+    customerEmail: emailSchema,
     customerMobile: z.string().optional(),
     customerAddress: z.string().optional(),
 

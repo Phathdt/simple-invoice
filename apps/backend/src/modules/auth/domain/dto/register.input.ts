@@ -1,8 +1,7 @@
 import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
-// Matches validator.js isEmail behavior (accepts short TLDs like x@x.x)
-const emailSchema = z.string().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email')
+import { emailSchema } from '../../../../common/dto/email.schema'
 
 export const registerSchema = z.object({
   fullName: z.string().min(2),
