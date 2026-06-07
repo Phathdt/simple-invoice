@@ -1,15 +1,15 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 
+import { Button as UiButton } from '@/components/ui/button'
+
 type Variant = 'primary' | 'secondary' | 'ghost'
 
-const base =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-colors duration-150 focus:outline-none focus:ring-3 disabled:cursor-not-allowed disabled:opacity-60'
-
-const variants: Record<Variant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500/30',
-  secondary:
-    'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus:ring-blue-500/20',
-  ghost: 'text-slate-600 hover:bg-slate-100 focus:ring-blue-500/20',
+// Maps the app's original variant names onto shadcn button variants so existing
+// call sites keep working after the shadcn migration.
+const variantMap: Record<Variant, 'default' | 'outline' | 'ghost'> = {
+  primary: 'default',
+  secondary: 'outline',
+  ghost: 'ghost',
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -17,11 +17,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
 }
 
-export function Button({ variant = 'primary', className = '', children, ...props }: ButtonProps) {
+export function Button({ variant = 'primary', children, ...props }: ButtonProps) {
   return (
-    <button className={`${base} ${variants[variant]} px-4 py-2.5 ${className}`} {...props}>
+    <UiButton variant={variantMap[variant]} {...props}>
       {children}
-    </button>
+    </UiButton>
   )
 }
 

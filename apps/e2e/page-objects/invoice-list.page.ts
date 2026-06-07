@@ -46,7 +46,9 @@ export class InvoiceListPage {
   }
 
   async selectPageSize(size: number): Promise<void> {
-    await this.page.getByLabel('Rows per page').selectOption(String(size))
+    // Radix Select (not a native <select>): open the trigger, then pick the option.
+    await this.page.getByLabel('Rows per page').click()
+    await this.page.getByRole('option', { name: String(size), exact: true }).click()
   }
 
   async expectRowVisible(invoiceNumber: string): Promise<void> {

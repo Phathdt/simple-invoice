@@ -4,8 +4,8 @@ import { Link } from '@tanstack/react-router'
 export function BrandLogo({ centered = false }: { centered?: boolean }) {
   return (
     <div className={`flex items-center gap-2.5 ${centered ? 'flex-col text-center' : ''}`}>
-      <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600">
-        <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <div className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+        <svg className="h-5 w-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -13,14 +13,14 @@ export function BrandLogo({ centered = false }: { centered?: boolean }) {
           />
         </svg>
       </div>
-      <span className="text-lg font-bold tracking-tight text-slate-900">SimpleInvoice</span>
+      <span className="text-lg font-bold tracking-tight text-foreground">SimpleInvoice</span>
     </div>
   )
 }
 
 export function AppHeader({ actions }: { actions?: ReactNode }) {
   return (
-    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-8">
         <Link to="/" className="no-underline">
           <BrandLogo />

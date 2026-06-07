@@ -14,7 +14,7 @@ export function CreateInvoicePage() {
     useCreateInvoice()
 
   return (
-    <div className="min-h-dvh bg-slate-50">
+    <div className="min-h-dvh bg-muted">
       <AppHeader
         actions={
           <Button type="button" variant="secondary" onClick={goToList}>
@@ -25,8 +25,8 @@ export function CreateInvoicePage() {
 
       <main className="mx-auto max-w-3xl p-4 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Create invoice</h2>
-          <p className="mt-0.5 text-sm text-slate-500">Enter invoice, customer, and payment item details</p>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Create invoice</h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">Enter invoice, customer, and payment item details</p>
         </div>
 
         <form onSubmit={submit} noValidate className="space-y-6">

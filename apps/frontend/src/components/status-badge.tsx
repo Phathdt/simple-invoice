@@ -1,26 +1,23 @@
+import { Badge } from '@/components/ui/badge'
 import { InvoiceStatus } from '@/features/invoice/invoice-status'
 
-function statusClasses(status: string): string {
+function variantForStatus(status: string): 'default' | 'success' | 'warning' | 'danger' {
   switch (status) {
     case InvoiceStatus.Paid:
-      return 'bg-green-100 text-green-800'
+      return 'success'
     case InvoiceStatus.Overdue:
-      return 'bg-red-100 text-red-800'
+      return 'danger'
     case InvoiceStatus.Pending:
-      return 'bg-amber-100 text-amber-800'
+      return 'warning'
     default:
-      return 'bg-slate-100 text-slate-700'
+      return 'default'
   }
 }
 
 export function StatusBadge({ status, size = 'sm' }: { status: string; size?: 'sm' | 'md' }) {
-  const sizing = size === 'md' ? 'px-3 py-1 text-sm' : 'px-2.5 py-0.5 text-xs'
   return (
-    <span
-      data-testid="status-badge"
-      className={`inline-flex items-center rounded-full font-medium ${sizing} ${statusClasses(status)}`}
-    >
+    <Badge data-testid="status-badge" variant={variantForStatus(status)} size={size}>
       {status}
-    </span>
+    </Badge>
   )
 }
