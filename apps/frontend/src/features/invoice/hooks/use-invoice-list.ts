@@ -5,7 +5,7 @@ import { useInvoiceControllerList } from '@/api/generated/invoices/invoices'
 import type { InvoiceControllerListParams } from '@/api/generated/models'
 import { removeToken } from '@/lib/auth'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE_OPTIONS = [10, 20, 50] as const
 
 type SortBy = NonNullable<InvoiceControllerListParams['sortBy']>
 type Ordering = NonNullable<InvoiceControllerListParams['ordering']>
@@ -13,6 +13,7 @@ type Ordering = NonNullable<InvoiceControllerListParams['ordering']>
 export function useInvoiceList() {
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZE_OPTIONS[0])
   const [keyword, setKeyword] = useState('')
   const [status, setStatus] = useState('')
   const [sortBy, setSortBy] = useState<SortBy>('createdAt')
@@ -22,7 +23,7 @@ export function useInvoiceList() {
 
   const params: InvoiceControllerListParams = {
     page,
-    pageSize: PAGE_SIZE,
+    pageSize,
     sortBy,
     ordering,
     ...(keyword ? { keyword } : {}),
@@ -53,6 +54,10 @@ export function useInvoiceList() {
     setToDate(v)
     setPage(1)
   }
+  const onPageSize = (v: number) => {
+    setPageSize(v)
+    setPage(1)
+  }
 
   const prevPage = () => setPage((p) => Math.max(1, p - 1))
   const nextPage = () => setPage((p) => Math.min(totalPages, p + 1))
@@ -66,13 +71,15 @@ export function useInvoiceList() {
   const openCreate = () => navigate({ to: '/invoices/create' })
 
   return {
-    state: { page, keyword, status, sortBy, ordering, fromDate, toDate },
+    state: { page, pageSize, keyword, status, sortBy, ordering, fromDate, toDate },
+    pageSizeOptions: PAGE_SIZE_OPTIONS,
     setSortBy,
     setOrdering,
     onKeyword,
     onStatus,
     onFromDate,
     onToDate,
+    onPageSize,
     prevPage,
     nextPage,
     logout,

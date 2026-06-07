@@ -78,6 +78,17 @@ describe('useInvoiceList', () => {
     expect(result.current.state.page).toBe(3)
   })
 
+  it('changes page size and resets page to 1', () => {
+    const { result } = renderHook(() => useInvoiceList(), { wrapper })
+    expect(result.current.state.pageSize).toBe(10)
+    act(() => result.current.nextPage())
+    expect(result.current.state.page).toBe(2)
+    act(() => result.current.onPageSize(50))
+    expect(result.current.state.pageSize).toBe(50)
+    expect(result.current.state.page).toBe(1)
+    expect(lastParams).toMatchObject({ page: 1, pageSize: 50 })
+  })
+
   it('logout clears token and navigates to login', () => {
     const { result } = renderHook(() => useInvoiceList(), { wrapper })
     act(() => result.current.logout())

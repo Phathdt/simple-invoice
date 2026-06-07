@@ -41,6 +41,14 @@ export class InvoiceListPage {
     return this.page.locator('[data-testid="invoice-row"]', { hasText: invoiceNumber })
   }
 
+  rows() {
+    return this.page.locator('[data-testid="invoice-row"]')
+  }
+
+  async selectPageSize(size: number): Promise<void> {
+    await this.page.getByLabel('Rows per page').selectOption(String(size))
+  }
+
   async expectRowVisible(invoiceNumber: string): Promise<void> {
     await expect(this.rowByInvoiceNumber(invoiceNumber)).toBeVisible({ timeout: TimeoutValue.ACTION })
   }

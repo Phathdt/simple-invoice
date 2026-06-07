@@ -21,6 +21,8 @@ export function HomePage() {
     onStatus,
     onFromDate,
     onToDate,
+    onPageSize,
+    pageSizeOptions,
     prevPage,
     nextPage,
     logout,
@@ -174,7 +176,24 @@ export function HomePage() {
             </div>
 
             <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
-              <span>{paging ? `${paging.total} invoices` : ''}</span>
+              <div className="flex items-center gap-3">
+                <span>{paging ? `${paging.total} invoices` : ''}</span>
+                <label className="flex items-center gap-1.5">
+                  Rows per page
+                  <select
+                    aria-label="Rows per page"
+                    value={state.pageSize}
+                    onChange={(e) => onPageSize(Number(e.target.value))}
+                    className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm text-slate-700 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10"
+                  >
+                    {pageSizeOptions.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={prevPage}

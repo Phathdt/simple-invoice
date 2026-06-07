@@ -1,4 +1,5 @@
 import { Given, Then, When } from '@cucumber/cucumber'
+import { expect } from '@playwright/test'
 
 import { getTestCredentials } from '@config/urls.config'
 import { InvoiceDetailPage } from '@page-objects/invoice-detail.page'
@@ -53,3 +54,15 @@ Then(
     await detailPage.expectLoaded(invoiceNumber)
   },
 )
+
+When('I select {int} rows per page', async function (this: BrowserWorld, size: number) {
+  const listPage = new InvoiceListPage(this.page)
+  logger.info(`Selecting page size: ${size}`)
+  await listPage.selectPageSize(size)
+})
+
+Then('I should see more than {int} invoice rows', async function (this: BrowserWorld, count: number) {
+  const listPage = new InvoiceListPage(this.page)
+  logger.info(`Expecting more than ${count} rows`)
+  await expect(listPage.rows().nth(count)).toBeVisible()
+})
