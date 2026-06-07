@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { CreateInvoiceInput } from '../../domain/dto/create-invoice.input'
 import type { Invoice } from '../../domain/entities/invoice.entity'
 import { InvoiceStatus } from '../../domain/entities/invoice-status'
-import { InvoiceNotFoundError } from '../../domain/errors'
+import { InvoiceNotFoundError, UnsupportedCurrencyError } from '../../domain/errors'
 import type { CreateInvoiceData, IInvoiceRepository } from '../../domain/interfaces/invoice.repository'
 import { InvoiceService } from './invoice.service'
 
@@ -110,6 +110,44 @@ describe('InvoiceService', () => {
       expect(captured?.totalPaid).toBe(0)
       expect(captured?.createdBy).toBe('user-42')
     })
+
+    it('sets base-currency fields: USD invoice keeps totalAmountBase == totalAmount', async () => {
+      let captured: CreateInvoiceData | undefined
+      vi.mocked(repo.create).mockImplementation(async (d) => {
+        captured = d
+        return persisted(d)
+      })
+
+      await service.create(buildInput(), 'user-1')
+      expect(captured?.baseCurrency).toBe('USD')
+      expect(captured?.exchangeRate).toBe(1)
+      expect(captured?.totalAmountBase).toBe(220)
+    })
+
+    it('converts non-USD totalAmount to base at full precision (no rounding)', async () => {
+      let captured: CreateInvoiceData | undefined
+      vi.mocked(repo.create).mockImplementation(async (d) => {
+        captured = d
+        return persisted(d)
+      })
+
+      // JPY rate 0.0064: total 220 → base 1.408
+      await service.create(buildInput({ currency: 'JPY', currencySymbol: '¥' }), 'user-1')
+      expect(captured?.exchangeRate).toBe(0.0064)
+      expect(captured?.totalAmountBase).toBe(220 * 0.0064)
+    })
+
+    it('throws UnsupportedCurrencyError for a currency without a rate', async () => {
+      await expect(
+        service.create(buildInput({ currency: 'XYZ', currencySymbol: '?' }), 'user-1'),
+      ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
+    })
+
+    it('rejects Object.prototype keys as currency (no rate poisoning)', async () => {
+      await expect(
+        service.create(buildInput({ currency: 'toString', currencySymbol: '?' }), 'user-1'),
+      ).rejects.toBeInstanceOf(UnsupportedCurrencyError)
+    })
   })
 
   describe('findById', () => {
@@ -158,6 +196,9 @@ describe('InvoiceService', () => {
         totalAmount: 110,
         totalPaid: 0,
         balanceAmount: 110,
+        exchangeRate: 1,
+        baseCurrency: 'USD',
+        totalAmountBase: 110,
         createdBy: 'u',
         items: [],
         createdAt: new Date(),
@@ -207,6 +248,9 @@ describe('InvoiceService', () => {
             totalAmount: 110,
             totalPaid: 0,
             balanceAmount: 110,
+            exchangeRate: 1,
+            baseCurrency: 'USD',
+            totalAmountBase: 110,
             createdBy: 'u',
             items: [],
             createdAt: new Date(),

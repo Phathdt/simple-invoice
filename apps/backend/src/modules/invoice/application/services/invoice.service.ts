@@ -2,9 +2,10 @@ import type { Paginated } from '../../../../common/dto/paginated'
 import { paginate } from '../../../../common/dto/paginated'
 import type { CreateInvoiceInput } from '../../domain/dto/create-invoice.input'
 import type { ListInvoicesQuery } from '../../domain/dto/list-invoices.query'
+import { BASE_CURRENCY, rateToBase } from '../../domain/entities/currency'
 import type { Invoice } from '../../domain/entities/invoice.entity'
 import { InvoiceStatus, OVERDUE_STATUS } from '../../domain/entities/invoice-status'
-import { InvoiceNotFoundError } from '../../domain/errors'
+import { InvoiceNotFoundError, UnsupportedCurrencyError } from '../../domain/errors'
 import { IInvoiceRepository, type InvoiceListFilter } from '../../domain/interfaces/invoice.repository'
 import { IInvoiceService } from '../../domain/interfaces/invoice.service'
 
@@ -18,6 +19,10 @@ export class InvoiceService implements IInvoiceService {
     const totalAmount = invoiceSubTotal + totalTax - totalDiscount
     const totalPaid = 0
     const balanceAmount = totalAmount - totalPaid
+
+    const exchangeRate = rateToBase(input.currency)
+    if (exchangeRate === undefined) throw new UnsupportedCurrencyError(input.currency)
+    const totalAmountBase = totalAmount * exchangeRate
 
     const created = await this.repo.create({
       invoiceNumber: input.invoiceNumber,
@@ -39,6 +44,9 @@ export class InvoiceService implements IInvoiceService {
       totalAmount,
       totalPaid,
       balanceAmount,
+      exchangeRate,
+      baseCurrency: BASE_CURRENCY,
+      totalAmountBase,
       createdBy: userId,
       items: input.items.map((i) => ({ name: i.name, quantity: i.quantity, rate: i.rate })),
     })
