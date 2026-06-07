@@ -1,3 +1,5 @@
+import type { InvoiceDisplayStatus } from './invoice-status'
+
 export interface InvoiceItem {
   id: string
   name: string
@@ -14,7 +16,7 @@ export interface Invoice {
   currency: string
   currencySymbol: string
   description?: string
-  status: string
+  status: InvoiceDisplayStatus
 
   customerName: string
   customerEmail: string

@@ -237,6 +237,7 @@ Page objects use `data-testid` selectors; failing scenarios save a Playwright tr
 - **Zod validation** via `nestjs-zod` instead of `class-validator` — better type inference and composability with TypeScript.
 - **Customer embedded on Invoice** — no separate `customers` table; simplifies queries for a single-owner invoice context.
 - **Overdue is derived, not stored** — computed at read time: `status != Paid AND dueDate < today`. Only `Draft`, `Pending`, and `Paid` are persisted.
+- **Typed invoice status** — statuses are modelled as a shared `InvoiceStatus` enum on both backend and frontend instead of raw string literals, so status checks are type-safe and greppable.
 - **JWT stateless auth** — no refresh tokens for this scope; expiry configurable via `JWT_EXPIRES_IN` env var (default 3600 s).
 - **Vitest** over Jest — faster, native ESM support, compatible with the SWC transform already in use.
 - **Testcontainers** for integration tests — spins up a real PostgreSQL instance; no mocks at the database layer.

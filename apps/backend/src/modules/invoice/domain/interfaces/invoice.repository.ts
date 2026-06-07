@@ -1,11 +1,12 @@
 import type { Invoice } from '../entities/invoice.entity'
+import type { InvoiceDisplayStatus, InvoiceStatus } from '../entities/invoice-status'
 
 export interface InvoiceListFilter {
   page: number
   pageSize: number
   sortBy: string
   ordering: 'ASC' | 'DESC'
-  status?: string
+  status?: InvoiceDisplayStatus
   keyword?: string
   fromDate?: Date
   toDate?: Date
@@ -19,7 +20,7 @@ export interface CreateInvoiceData {
   currency: string
   currencySymbol: string
   description?: string
-  status: string
+  status: InvoiceStatus
 
   customerName: string
   customerEmail: string

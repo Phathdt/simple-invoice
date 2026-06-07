@@ -5,13 +5,14 @@ import { faker } from '@faker-js/faker'
 import { hash } from 'bcryptjs'
 
 import { PrismaClient } from '../src/generated/prisma/client'
+import { InvoiceStatus } from '../src/modules/invoice/domain/entities/invoice-status'
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
 })
 
 // Persisted statuses only — Overdue is derived at read-time, never seeded.
-const STATUSES = ['Draft', 'Pending', 'Paid'] as const
+const STATUSES = [InvoiceStatus.Draft, InvoiceStatus.Pending, InvoiceStatus.Paid] as const
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100
@@ -70,10 +71,10 @@ async function main() {
 
     // Past-due stay Draft/Pending so Overdue derivation fires at read-time.
     const status = pastDue
-      ? faker.helpers.arrayElement(['Draft', 'Pending'] as const)
+      ? faker.helpers.arrayElement([InvoiceStatus.Draft, InvoiceStatus.Pending] as const)
       : faker.helpers.arrayElement(STATUSES)
 
-    const totalPaid = status === 'Paid' ? totalAmount : 0
+    const totalPaid = status === InvoiceStatus.Paid ? totalAmount : 0
     const balanceAmount = round2(totalAmount - totalPaid)
 
     await prisma.invoice.create({

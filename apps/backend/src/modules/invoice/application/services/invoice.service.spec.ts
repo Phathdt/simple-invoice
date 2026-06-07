@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { CreateInvoiceInput } from '../../domain/dto/create-invoice.input'
 import type { Invoice } from '../../domain/entities/invoice.entity'
+import { InvoiceStatus } from '../../domain/entities/invoice-status'
 import { InvoiceNotFoundError } from '../../domain/errors'
 import type { CreateInvoiceData, IInvoiceRepository } from '../../domain/interfaces/invoice.repository'
 import { InvoiceService } from './invoice.service'
@@ -122,7 +123,7 @@ describe('InvoiceService', () => {
         ...buildInput(),
         invoiceDate: new Date('2026-01-01'),
         dueDate: new Date('2099-01-01'),
-        status: 'Draft',
+        status: InvoiceStatus.Draft,
         taxRate: 10,
         invoiceSubTotal: 200,
         totalTax: 20,
@@ -139,7 +140,7 @@ describe('InvoiceService', () => {
   })
 
   describe('deriveOverdue', () => {
-    function invoiceWith(status: string, dueDate: Date): Invoice {
+    function invoiceWith(status: Invoice['status'], dueDate: Date): Invoice {
       return {
         id: 'x',
         invoiceNumber: 'IV',
@@ -167,19 +168,19 @@ describe('InvoiceService', () => {
     const future = new Date('2099-01-01')
 
     it('marks unsettled past-due as Overdue', async () => {
-      vi.mocked(repo.findById).mockResolvedValue(invoiceWith('Pending', past))
+      vi.mocked(repo.findById).mockResolvedValue(invoiceWith(InvoiceStatus.Pending, past))
       const result = await service.findById('x')
       expect(result.status).toBe('Overdue')
     })
 
     it('does NOT mark Paid past-due as Overdue', async () => {
-      vi.mocked(repo.findById).mockResolvedValue(invoiceWith('Paid', past))
+      vi.mocked(repo.findById).mockResolvedValue(invoiceWith(InvoiceStatus.Paid, past))
       const result = await service.findById('x')
       expect(result.status).toBe('Paid')
     })
 
     it('does NOT mark future-due as Overdue', async () => {
-      vi.mocked(repo.findById).mockResolvedValue(invoiceWith('Draft', future))
+      vi.mocked(repo.findById).mockResolvedValue(invoiceWith(InvoiceStatus.Draft, future))
       const result = await service.findById('x')
       expect(result.status).toBe('Draft')
     })
@@ -196,7 +197,7 @@ describe('InvoiceService', () => {
             dueDate: new Date('2020-02-01'),
             currency: 'USD',
             currencySymbol: '$',
-            status: 'Pending',
+            status: InvoiceStatus.Pending,
             customerName: 'c',
             customerEmail: 'c@c.com',
             taxRate: 10,

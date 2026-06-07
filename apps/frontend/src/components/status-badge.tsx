@@ -1,10 +1,12 @@
+import { InvoiceStatus } from '@/features/invoice/invoice-status'
+
 function statusClasses(status: string): string {
   switch (status) {
-    case 'Paid':
+    case InvoiceStatus.Paid:
       return 'bg-green-100 text-green-800'
-    case 'Overdue':
+    case InvoiceStatus.Overdue:
       return 'bg-red-100 text-red-800'
-    case 'Pending':
+    case InvoiceStatus.Pending:
       return 'bg-amber-100 text-amber-800'
     default:
       return 'bg-slate-100 text-slate-700'

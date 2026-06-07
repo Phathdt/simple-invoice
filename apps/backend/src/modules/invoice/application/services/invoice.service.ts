@@ -3,8 +3,9 @@ import { paginate } from '../../../../common/dto/paginated'
 import type { CreateInvoiceInput } from '../../domain/dto/create-invoice.input'
 import type { ListInvoicesQuery } from '../../domain/dto/list-invoices.query'
 import type { Invoice } from '../../domain/entities/invoice.entity'
+import { InvoiceStatus, OVERDUE_STATUS } from '../../domain/entities/invoice-status'
 import { InvoiceNotFoundError } from '../../domain/errors'
-import { IInvoiceRepository } from '../../domain/interfaces/invoice.repository'
+import { IInvoiceRepository, type InvoiceListFilter } from '../../domain/interfaces/invoice.repository'
 import { IInvoiceService } from '../../domain/interfaces/invoice.service'
 
 export class InvoiceService implements IInvoiceService {
@@ -26,7 +27,7 @@ export class InvoiceService implements IInvoiceService {
       currency: input.currency,
       currencySymbol: input.currencySymbol,
       description: input.description,
-      status: 'Draft',
+      status: InvoiceStatus.Draft,
       customerName: input.customerName,
       customerEmail: input.customerEmail,
       customerMobile: input.customerMobile,
@@ -57,7 +58,7 @@ export class InvoiceService implements IInvoiceService {
       pageSize: query.pageSize,
       sortBy: query.sortBy,
       ordering: query.ordering,
-      status: query.status,
+      status: query.status as InvoiceListFilter['status'],
       keyword: query.keyword,
       fromDate: query.fromDate ? new Date(query.fromDate) : undefined,
       toDate: query.toDate ? new Date(query.toDate) : undefined,
@@ -73,8 +74,8 @@ export class InvoiceService implements IInvoiceService {
   // Overdue is a read-time projection, never persisted: an unsettled invoice
   // whose due date has passed reads as Overdue.
   private deriveOverdue(invoice: Invoice): Invoice {
-    if (invoice.status !== 'Paid' && new Date(invoice.dueDate) < startOfToday()) {
-      return { ...invoice, status: 'Overdue' }
+    if (invoice.status !== InvoiceStatus.Paid && new Date(invoice.dueDate) < startOfToday()) {
+      return { ...invoice, status: OVERDUE_STATUS }
     }
     return invoice
   }

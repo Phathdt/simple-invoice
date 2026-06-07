@@ -7,6 +7,7 @@ import {
   InvoiceItem as PrismaInvoiceItem,
 } from '../../../../generated/prisma/client'
 import type { Invoice, InvoiceItem } from '../../domain/entities/invoice.entity'
+import { InvoiceStatus, OVERDUE_STATUS } from '../../domain/entities/invoice-status'
 import { DuplicateInvoiceNumberError } from '../../domain/errors'
 import {
   IInvoiceRepository,
@@ -32,7 +33,7 @@ function toEntity(row: PrismaInvoice): Invoice {
     currency: row.currency,
     currencySymbol: row.currencySymbol,
     description: row.description ?? undefined,
-    status: row.status,
+    status: row.status as InvoiceStatus,
     customerName: row.customerName,
     customerEmail: row.customerEmail,
     customerMobile: row.customerMobile ?? undefined,
@@ -98,10 +99,10 @@ export class InvoicePrismaRepository implements IInvoiceRepository {
       ]
     }
 
-    if (filter.status === 'Overdue') {
+    if (filter.status === OVERDUE_STATUS) {
       // Overdue is derived, never persisted: not-yet-settled invoices past due.
-      where.AND = [{ status: { in: ['Draft', 'Pending'] } }, { dueDate: { lt: startOfToday() } }]
-    } else if (filter.status === 'Draft' || filter.status === 'Pending') {
+      where.AND = [{ status: { in: [InvoiceStatus.Draft, InvoiceStatus.Pending] } }, { dueDate: { lt: startOfToday() } }]
+    } else if (filter.status === InvoiceStatus.Draft || filter.status === InvoiceStatus.Pending) {
       where.AND = [{ status: filter.status }, { dueDate: { gte: startOfToday() } }]
     } else if (filter.status) {
       where.status = filter.status

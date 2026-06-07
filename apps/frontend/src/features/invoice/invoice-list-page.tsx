@@ -2,8 +2,9 @@ import { AppHeader } from '@/components/app-header'
 import { Button, Spinner } from '@/components/button'
 import { StatusBadge } from '@/components/status-badge'
 import { useInvoiceList } from '@/features/invoice/hooks/use-invoice-list'
+import { INVOICE_STATUSES } from '@/features/invoice/invoice-status'
 
-const STATUS_OPTIONS = ['', 'Draft', 'Pending', 'Paid', 'Overdue']
+const STATUS_OPTIONS = ['', ...INVOICE_STATUSES]
 
 function formatMoney(symbol: string, amount: number): string {
   return `${symbol}${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
