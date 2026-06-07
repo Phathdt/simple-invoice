@@ -1,6 +1,6 @@
 generator client {
   provider     = "prisma-client"
-  output       = "./generated"
+  output       = "../src/generated/prisma"
   runtime      = "nodejs"
   moduleFormat = "cjs"
 }
@@ -55,6 +55,10 @@ model Invoice {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@index([status])
+  @@index([invoiceDate])
+  @@index([dueDate])
+  @@index([createdBy])
   @@map("invoices")
 }
 

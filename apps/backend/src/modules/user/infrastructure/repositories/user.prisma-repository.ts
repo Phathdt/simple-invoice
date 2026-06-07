@@ -1,7 +1,7 @@
 import { PrismaService } from '@modules/prisma'
 import { Injectable } from '@nestjs/common'
 
-import type { User as PrismaUser } from '../../../../../prisma/generated/client'
+import type { User as PrismaUser } from '../../../../generated/prisma/client'
 import type { User, UserCredentials } from '../../domain/entities/user.entity'
 import { IUserRepository } from '../../domain/interfaces/user.repository'
 

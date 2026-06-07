@@ -1,48 +1,22 @@
 import { PrismaService } from '@modules/prisma'
 import { Injectable } from '@nestjs/common'
 
-import { Prisma } from '../../../../../prisma/generated/client'
+import {
+  Prisma,
+  Invoice as PrismaInvoiceModel,
+  InvoiceItem as PrismaInvoiceItem,
+} from '../../../../generated/prisma/client'
 import type { Invoice, InvoiceItem } from '../../domain/entities/invoice.entity'
 import { DuplicateInvoiceNumberError } from '../../domain/errors'
 import {
-  type CreateInvoiceData,
   IInvoiceRepository,
+  type CreateInvoiceData,
   type InvoiceListFilter,
 } from '../../domain/interfaces/invoice.repository'
 
 // Prisma row shapes (Decimal-typed money) → domain entities (number money).
-type PrismaInvoiceItem = {
-  id: string
-  name: string
-  quantity: number
-  rate: Prisma.Decimal
-}
-
-type PrismaInvoice = {
-  id: string
-  invoiceNumber: string
-  invoiceReference: string | null
-  invoiceDate: Date
-  dueDate: Date
-  currency: string
-  currencySymbol: string
-  description: string | null
-  status: string
-  customerName: string
-  customerEmail: string
-  customerMobile: string | null
-  customerAddress: string | null
-  taxRate: Prisma.Decimal
-  invoiceSubTotal: Prisma.Decimal
-  totalTax: Prisma.Decimal
-  totalDiscount: Prisma.Decimal
-  totalAmount: Prisma.Decimal
-  totalPaid: Prisma.Decimal
-  balanceAmount: Prisma.Decimal
-  createdBy: string
-  createdAt: Date
-  items?: PrismaInvoiceItem[]
-}
+// The model type has no relations, so compose `items` for the include query.
+type PrismaInvoice = PrismaInvoiceModel & { items: PrismaInvoiceItem[] }
 
 function toItem(row: PrismaInvoiceItem): InvoiceItem {
   return { id: row.id, name: row.name, quantity: row.quantity, rate: row.rate.toNumber() }

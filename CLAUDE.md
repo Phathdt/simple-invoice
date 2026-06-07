@@ -155,6 +155,6 @@ apps/e2e/
 
 `docker compose up` starts postgres + backend + frontend.
 
-Backend Dockerfile CMD: `prisma migrate deploy && node dist/main.cjs`. Frontend builds a static SPA served by nginx (`apps/frontend/Dockerfile` + `nginx.conf`); the build bakes in `VITE_API_BASE_URL` (default `http://localhost:4000`).
+Backend Dockerfile CMD: `prisma migrate deploy && node dist/main.js`. Frontend builds a static SPA served by nginx (`apps/frontend/Dockerfile` + `nginx.conf`); the build bakes in `VITE_API_BASE_URL` (default `http://localhost:4000`).
 
 Ports: backend `4000`, postgres `5432`, frontend `8080`.
