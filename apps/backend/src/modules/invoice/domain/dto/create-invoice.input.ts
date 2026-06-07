@@ -2,6 +2,7 @@ import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
 import { emailSchema } from '../../../../common/dto/email.schema'
+import { symbolForCurrency } from '../entities/currency'
 
 const itemSchema = z.object({
   name: z.string().min(1),
@@ -36,6 +37,10 @@ export const createInvoiceSchema = z
   .refine((d) => d.dueDate >= d.invoiceDate, {
     message: 'dueDate must be on or after invoiceDate',
     path: ['dueDate'],
+  })
+  .refine((d) => symbolForCurrency(d.currency) === d.currencySymbol, {
+    message: 'currencySymbol does not match currency',
+    path: ['currencySymbol'],
   })
 
 export class CreateInvoiceInput extends createZodDto(createInvoiceSchema) {}

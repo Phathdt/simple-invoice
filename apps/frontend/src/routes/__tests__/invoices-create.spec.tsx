@@ -69,7 +69,6 @@ describe('Create invoice page', () => {
     fireEvent.change(container.querySelector('[name="invoiceDate"]')!, { target: { value: '2026-06-15' } })
     fireEvent.change(container.querySelector('[name="dueDate"]')!, { target: { value: '2026-06-01' } })
     fireEvent.change(container.querySelector('[name="currency"]')!, { target: { value: 'USD' } })
-    fireEvent.change(container.querySelector('[name="currencySymbol"]')!, { target: { value: '$' } })
     fireEvent.change(container.querySelector('[name="customerName"]')!, { target: { value: 'Test Co' } })
     fireEvent.change(container.querySelector('[name="customerEmail"]')!, { target: { value: 'test@test.com' } })
     fireEvent.change(container.querySelector('[name="items.0.name"]')!, { target: { value: 'Widget' } })

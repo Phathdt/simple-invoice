@@ -10,7 +10,8 @@ import {
 } from './create-invoice-form-sections'
 
 export function CreateInvoicePage() {
-  const { register, errors, submit, goToList, created, isPending, isError, errorMessage } = useCreateInvoice()
+  const { register, setValue, errors, submit, goToList, created, isPending, isError, errorMessage } =
+    useCreateInvoice()
 
   return (
     <div className="min-h-dvh bg-slate-50">
@@ -29,7 +30,7 @@ export function CreateInvoicePage() {
         </div>
 
         <form onSubmit={submit} noValidate className="space-y-6">
-          <InvoiceDetailsSection register={register} errors={errors} />
+          <InvoiceDetailsSection register={register} errors={errors} setValue={setValue} />
           <CustomerSection register={register} errors={errors} />
           <ItemSection register={register} errors={errors} />
           <TaxDiscountSection register={register} errors={errors} />

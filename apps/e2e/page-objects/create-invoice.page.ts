@@ -7,7 +7,6 @@ export interface InvoiceFormInput {
   invoiceDate: string
   dueDate: string
   currency: string
-  currencySymbol: string
   customerName: string
   customerEmail: string
   itemName: string
@@ -39,8 +38,8 @@ export class CreateInvoicePage {
     await this.byName('invoiceNumber').fill(input.invoiceNumber)
     await this.byName('invoiceDate').fill(input.invoiceDate)
     await this.byName('dueDate').fill(input.dueDate)
-    await this.byName('currency').fill(input.currency)
-    await this.byName('currencySymbol').fill(input.currencySymbol)
+    // Currency is a select; the symbol is derived automatically.
+    await this.byName('currency').selectOption(input.currency)
     await this.byName('customerName').fill(input.customerName)
     await this.byName('customerEmail').fill(input.customerEmail)
     await this.byName('items.0.name').fill(input.itemName)

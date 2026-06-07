@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 import { emailSchema } from '@/lib/validation'
 
+import { symbolForCurrency } from './currency'
+
 const itemSchema = z.object({
   name: z.string().min(1, 'Required'),
   quantity: z.number().int().positive('Must be > 0'),
@@ -28,6 +30,10 @@ export const createInvoiceSchema = z
   .refine((d) => !d.invoiceDate || !d.dueDate || d.dueDate >= d.invoiceDate, {
     message: 'Due date must be on or after invoice date',
     path: ['dueDate'],
+  })
+  .refine((d) => symbolForCurrency(d.currency) === d.currencySymbol, {
+    message: 'Invalid currency',
+    path: ['currency'],
   })
 
 export type CreateInvoiceForm = z.infer<typeof createInvoiceSchema>

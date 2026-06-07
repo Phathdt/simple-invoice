@@ -33,7 +33,6 @@ When('I fill in the invoice form with a unique invoice number', async function (
     invoiceDate: '2026-01-15',
     dueDate: '2026-02-15',
     currency: 'USD',
-    currencySymbol: '$',
     customerName: 'E2E Test Customer',
     customerEmail: 'e2e-create@example.com',
     itemName: 'E2E Service',

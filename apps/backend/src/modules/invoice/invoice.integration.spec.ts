@@ -85,6 +85,14 @@ describe('Invoice (integration)', () => {
     expect(res.status).toBe(409)
   })
 
+  it('POST /invoices rejects a currencySymbol that does not match the currency', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/invoices')
+      .set(auth())
+      .send({ ...validInvoice(), currency: 'USD', currencySymbol: '₫' })
+    expect(res.status).toBe(400)
+  })
+
   it('POST /invoices requires exactly one line item', async () => {
     const res = await request(app.getHttpServer())
       .post('/invoices')

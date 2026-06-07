@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react'
-import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
 
+import { CURRENCY_CODES, symbolForCurrency } from './currency'
 import type { CreateInvoiceForm } from './create-invoice-form-schema'
 
 type FormRegister = UseFormRegister<CreateInvoiceForm>
 type FormErrors = FieldErrors<CreateInvoiceForm>
+type FormSetValue = UseFormSetValue<CreateInvoiceForm>
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
@@ -28,7 +30,15 @@ function FormSection({ title, children }: { title: string; children: ReactNode }
   )
 }
 
-export function InvoiceDetailsSection({ register, errors }: { register: FormRegister; errors: FormErrors }) {
+export function InvoiceDetailsSection({
+  register,
+  errors,
+  setValue,
+}: {
+  register: FormRegister
+  errors: FormErrors
+  setValue: FormSetValue
+}) {
   return (
     <FormSection title="Invoice details">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -45,10 +55,29 @@ export function InvoiceDetailsSection({ register, errors }: { register: FormRegi
           <input type="date" {...register('dueDate')} className={inputCls} />
         </Field>
         <Field label="Currency *" error={errors.currency?.message}>
-          <input {...register('currency')} placeholder="USD" className={inputCls} />
+          <select
+            {...register('currency', {
+              onChange: (e) =>
+                setValue('currencySymbol', symbolForCurrency(e.target.value), { shouldValidate: true }),
+            })}
+            className={inputCls}
+          >
+            <option value="">Select currency</option>
+            {CURRENCY_CODES.map((code) => (
+              <option key={code} value={code}>
+                {code} ({symbolForCurrency(code)})
+              </option>
+            ))}
+          </select>
         </Field>
-        <Field label="Currency symbol *" error={errors.currencySymbol?.message}>
-          <input {...register('currencySymbol')} placeholder="$" className={inputCls} />
+        <Field label="Currency symbol" error={errors.currencySymbol?.message}>
+          {/* Derived from the selected currency via setValue; read-only so the pair can't drift. */}
+          <input
+            {...register('currencySymbol')}
+            readOnly
+            placeholder="—"
+            className={`${inputCls} bg-slate-50 text-slate-500`}
+          />
         </Field>
         <div className="sm:col-span-2">
           <Field label="Description" error={errors.description?.message}>
