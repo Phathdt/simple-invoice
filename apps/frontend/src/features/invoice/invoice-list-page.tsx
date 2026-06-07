@@ -1,14 +1,11 @@
 import { AppHeader } from '@/components/app-header'
 import { Button, Spinner } from '@/components/button'
 import { StatusBadge } from '@/components/status-badge'
+import { formatMoney } from '@/features/invoice/currency'
 import { useInvoiceList } from '@/features/invoice/hooks/use-invoice-list'
 import { INVOICE_STATUSES } from '@/features/invoice/invoice-status'
 
 const STATUS_OPTIONS = ['', ...INVOICE_STATUSES]
-
-function formatMoney(symbol: string, amount: number): string {
-  return `${symbol}${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-}
 
 const selectCls =
   'rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-3 focus:ring-blue-500/10'
@@ -165,7 +162,7 @@ export function HomePage() {
                       <td className="px-4 py-3 tabular-nums text-slate-500">{invoice.invoiceDate}</td>
                       <td className="px-4 py-3 tabular-nums text-slate-500">{invoice.dueDate}</td>
                       <td className="px-4 py-3 text-right font-medium tabular-nums text-slate-900">
-                        {formatMoney(invoice.currencySymbol, invoice.totalAmount)}
+                        {formatMoney(invoice.totalAmount, invoice.currency, invoice.currencySymbol)}
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={invoice.status} />

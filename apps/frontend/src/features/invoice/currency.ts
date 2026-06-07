@@ -17,3 +17,25 @@ export const CURRENCY_CODES = Object.keys(CURRENCY_SYMBOLS) as CurrencyCode[]
 export function symbolForCurrency(code: string): string {
   return CURRENCY_SYMBOLS[code as CurrencyCode] ?? ''
 }
+
+// Currencies without minor units (no decimal places).
+const ZERO_DECIMAL_CURRENCIES = new Set<string>(['VND', 'JPY'])
+
+// Currencies that display the symbol after the amount (e.g. 1.109.961 ₫).
+const SUFFIX_SYMBOL_CURRENCIES = new Set<string>(['VND'])
+
+function fractionDigits(code: string): number {
+  return ZERO_DECIMAL_CURRENCIES.has(code) ? 0 : 2
+}
+
+// Formats an amount using the persisted symbol, the currency's decimal rules
+// (e.g. VND/JPY have no decimals), and symbol placement (VND trails the amount).
+export function formatMoney(amount: number, currency: string, symbol: string): string {
+  const digits = fractionDigits(currency)
+  const formatted = amount.toLocaleString('en-US', {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  })
+  return SUFFIX_SYMBOL_CURRENCIES.has(currency) ? `${formatted} ${symbol}` : `${symbol}${formatted}`
+}
+
