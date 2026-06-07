@@ -31,6 +31,10 @@ export interface Invoice {
   totalPaid: number
   balanceAmount: number
 
+  exchangeRate: number
+  baseCurrency: string
+  totalAmountBase: number
+
   createdBy: string
   items: InvoiceItem[]
 

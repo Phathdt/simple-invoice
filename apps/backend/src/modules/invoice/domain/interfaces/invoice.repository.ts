@@ -35,6 +35,10 @@ export interface CreateInvoiceData {
   totalPaid: number
   balanceAmount: number
 
+  exchangeRate: number
+  baseCurrency: string
+  totalAmountBase: number
+
   createdBy: string
   items: { name: string; quantity: number; rate: number }[]
 }

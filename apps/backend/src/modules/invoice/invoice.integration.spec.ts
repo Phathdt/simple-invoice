@@ -114,6 +114,14 @@ describe('Invoice (integration)', () => {
     expect(typeof res.body.paging.total).toBe('number')
   })
 
+  it('POST /invoices does not leak internal base-currency fields', async () => {
+    const res = await request(app.getHttpServer()).post('/invoices').set(auth()).send(validInvoice())
+    expect(res.status).toBe(201)
+    expect(res.body.data.exchangeRate).toBeUndefined()
+    expect(res.body.data.baseCurrency).toBeUndefined()
+    expect(res.body.data.totalAmountBase).toBeUndefined()
+  })
+
   it('GET /invoices?keyword filters by customer name', async () => {
     const payload = { ...validInvoice(), customerName: 'ZZZ Unique Customer' }
     await request(app.getHttpServer()).post('/invoices').set(auth()).send(payload)
@@ -155,6 +163,41 @@ describe('Invoice (integration)', () => {
     expect(res.status).toBe(200)
     expect(res.body.data.id).toBe(id)
     expect(res.body.data.items).toHaveLength(1)
+  })
+
+  it('GET /invoices?sortBy=totalAmount orders by base-currency value across currencies', async () => {
+    // USD 1.00 (base 1.0) vs JPY 100 (base 0.64): raw figure says JPY is larger,
+    // but real worth says USD is. Sorting must reflect base value.
+    const tag = `SORTBASE-${Date.now()}`
+    const usd = {
+      ...validInvoice(),
+      customerName: `${tag}-USD`,
+      currency: 'USD',
+      currencySymbol: '$',
+      items: [{ name: 'x', quantity: 1, rate: 1 }],
+      tax: 0,
+      discount: 0,
+    }
+    const jpy = {
+      ...validInvoice(),
+      customerName: `${tag}-JPY`,
+      currency: 'JPY',
+      currencySymbol: '¥',
+      items: [{ name: 'x', quantity: 1, rate: 100 }],
+      tax: 0,
+      discount: 0,
+    }
+    await request(app.getHttpServer()).post('/invoices').set(auth()).send(usd)
+    await request(app.getHttpServer()).post('/invoices').set(auth()).send(jpy)
+
+    const res = await request(app.getHttpServer())
+      .get('/invoices')
+      .query({ keyword: tag, sortBy: 'totalAmount', ordering: 'DESC' })
+      .set(auth())
+
+    expect(res.status).toBe(200)
+    const names = res.body.data.map((i: { customerName: string }) => i.customerName)
+    expect(names).toEqual([`${tag}-USD`, `${tag}-JPY`])
   })
 
   it('GET /invoices/:id returns 404 for unknown id', async () => {

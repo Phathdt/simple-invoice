@@ -45,6 +45,9 @@ function toEntity(row: PrismaInvoice): Invoice {
     totalAmount: row.totalAmount.toNumber(),
     totalPaid: row.totalPaid.toNumber(),
     balanceAmount: row.balanceAmount.toNumber(),
+    exchangeRate: row.exchangeRate.toNumber(),
+    baseCurrency: row.baseCurrency,
+    totalAmountBase: row.totalAmountBase.toNumber(),
     createdBy: row.createdBy,
     items: (row.items ?? []).map(toItem),
     createdAt: row.createdAt,
@@ -62,7 +65,10 @@ export class InvoicePrismaRepository implements IInvoiceRepository {
 
   async findMany(filter: InvoiceListFilter): Promise<{ rows: Invoice[]; total: number }> {
     const where = this.buildWhere(filter)
-    const orderBy = { [filter.sortBy]: filter.ordering.toLowerCase() as 'asc' | 'desc' }
+    // Sort "totalAmount" by the base-currency value so amounts across currencies
+    // order by real worth, not raw figures. Other sort fields pass through.
+    const col = filter.sortBy === 'totalAmount' ? 'totalAmountBase' : filter.sortBy
+    const orderBy = { [col]: filter.ordering.toLowerCase() as 'asc' | 'desc' }
     const skip = (filter.page - 1) * filter.pageSize
 
     const [rows, total] = await Promise.all([

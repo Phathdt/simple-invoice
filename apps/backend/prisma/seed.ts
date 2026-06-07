@@ -5,6 +5,12 @@ import { faker } from '@faker-js/faker'
 import { hash } from 'bcryptjs'
 
 import { PrismaClient } from '../src/generated/prisma/client'
+import {
+  BASE_CURRENCY,
+  CURRENCY_CODES,
+  CURRENCY_SYMBOLS,
+  EXCHANGE_RATES_TO_USD,
+} from '../src/modules/invoice/domain/entities/currency'
 import { InvoiceStatus } from '../src/modules/invoice/domain/entities/invoice-status'
 
 const prisma = new PrismaClient({
@@ -78,14 +84,21 @@ async function main() {
     const totalPaid = status === InvoiceStatus.Paid ? totalAmount : 0
     const balanceAmount = round2(totalAmount - totalPaid)
 
+    // Cycle through every currency (i % N) so all are represented; pick is
+    // faker-free to keep date/amount distribution identical to the seed RNG.
+    const currency = CURRENCY_CODES[i % CURRENCY_CODES.length]
+    const currencySymbol = CURRENCY_SYMBOLS[currency]
+    const exchangeRate = EXCHANGE_RATES_TO_USD[currency]
+    const totalAmountBase = totalAmount * exchangeRate
+
     await prisma.invoice.create({
       data: {
         invoiceNumber: `IV-${faker.string.alphanumeric({ length: 8, casing: 'upper' })}`,
         invoiceReference: faker.datatype.boolean(0.4) ? `REF-${faker.string.alphanumeric({ length: 6, casing: 'upper' })}` : null,
         invoiceDate,
         dueDate,
-        currency: 'USD',
-        currencySymbol: '$',
+        currency,
+        currencySymbol,
         description: faker.datatype.boolean(0.6) ? faker.commerce.productDescription() : null,
         status,
         customerName: faker.person.fullName(),
@@ -99,6 +112,9 @@ async function main() {
         totalAmount,
         totalPaid,
         balanceAmount,
+        exchangeRate,
+        baseCurrency: BASE_CURRENCY,
+        totalAmountBase,
         createdBy: creator.id,
         items: { create: items },
       },
