@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Link } from '@tanstack/react-router'
 
 export function BrandLogo({ centered = false }: { centered?: boolean }) {
   return (
@@ -21,7 +22,9 @@ export function AppHeader({ actions }: { actions?: ReactNode }) {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-8">
-        <BrandLogo />
+        <Link to="/" className="no-underline">
+          <BrandLogo />
+        </Link>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
     </header>
