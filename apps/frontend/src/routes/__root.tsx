@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { useSessionValidation } from '@/features/auth/hooks/use-session-validation'
 
@@ -14,13 +16,19 @@ const queryClient = new QueryClient({
 
 function RootLayout() {
   useSessionValidation()
-  return <Outlet />
+  return (
+    <>
+      <Outlet />
+      {import.meta.env.DEV && <TanStackRouterDevtools position="bottom-right" />}
+    </>
+  )
 }
 
 export const Route = createRootRoute({
   component: () => (
     <QueryClientProvider client={queryClient}>
       <RootLayout />
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   ),
 })
