@@ -12,6 +12,7 @@ vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => mockNavigate,
   redirect: vi.fn(),
   Outlet: () => null,
+  Link: ({ children, ...props }: Record<string, unknown>) => <a {...props}>{children as React.ReactNode}</a>,
 }))
 
 vi.mock('@/lib/auth', () => ({

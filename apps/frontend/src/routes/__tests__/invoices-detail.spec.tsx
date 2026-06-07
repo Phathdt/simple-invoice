@@ -11,6 +11,7 @@ vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ id: 'test-id-123' }),
   redirect: vi.fn(),
   Outlet: () => null,
+  Link: ({ children, ...props }: Record<string, unknown>) => <a {...props}>{children as React.ReactNode}</a>,
 }))
 
 vi.mock('@/lib/auth', () => ({
