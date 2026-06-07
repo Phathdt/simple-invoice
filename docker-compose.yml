@@ -26,11 +26,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    # Load secrets/config from the backend's own .env (JWT_SECRET, JWT_EXPIRES_IN, ...).
+    env_file:
+      - apps/backend/.env
+    # Overrides for the container context (take precedence over env_file).
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/simple-invoice
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set (e.g. in a .env file or the shell environment)}
       NODE_ENV: production
-      PORT: "4000"
       LOG_LEVEL: info
     ports:
       - "4000:4000"
