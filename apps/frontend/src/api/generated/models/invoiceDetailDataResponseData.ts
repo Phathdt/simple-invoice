@@ -5,10 +5,11 @@
  * SimpleInvoice REST API
  * OpenAPI spec version: 1.0
  */
+import type { InvoiceDetailDataResponseDataCustomer } from './invoiceDetailDataResponseDataCustomer.ts';
 import type { InvoiceDetailDataResponseDataItemsItem } from './invoiceDetailDataResponseDataItemsItem.ts';
 
 export type InvoiceDetailDataResponseData = {
-  id: string;
+  invoiceId: string;
   invoiceNumber: string;
   /** @nullable */
   invoiceReference?: string | null;
@@ -19,12 +20,7 @@ export type InvoiceDetailDataResponseData = {
   /** @nullable */
   description?: string | null;
   status: string;
-  customerName: string;
-  customerEmail: string;
-  /** @nullable */
-  customerMobile?: string | null;
-  /** @nullable */
-  customerAddress?: string | null;
+  customer: InvoiceDetailDataResponseDataCustomer;
   taxRate: number;
   invoiceSubTotal: number;
   totalTax: number;

@@ -8,13 +8,7 @@ import { InvoiceDetailDataResponse, InvoiceListDataResponse } from '../../domain
 import { ListInvoicesQuery } from '../../domain/dto/list-invoices.query'
 import type { Invoice } from '../../domain/entities/invoice.entity'
 import { IInvoiceService } from '../../domain/interfaces/invoice.service'
-
-// exchangeRate/baseCurrency/totalAmountBase back cross-currency sorting only —
-// internal machinery, never part of the API contract (see invoiceResponseSchema).
-function present(invoice: Invoice) {
-  const { exchangeRate: _r, baseCurrency: _b, totalAmountBase: _t, ...rest } = invoice
-  return rest
-}
+import { presentInvoice } from './invoice.presenter'
 
 @ApiTags('invoices')
 @ApiBearerAuth()
@@ -27,7 +21,7 @@ export class InvoiceController {
   @ApiResponse({ status: 201, description: 'Invoice created', type: InvoiceDetailDataResponse })
   @ApiResponse({ status: 409, description: 'Invoice number already exists' })
   async create(@Body() body: CreateInvoiceInput, @CurrentUser() user: JwtPayload) {
-    return present(await this.invoices.create(body, user.sub))
+    return presentInvoice(await this.invoices.create(body, user.sub))
   }
 
   @Get()
@@ -35,7 +29,7 @@ export class InvoiceController {
   @ApiResponse({ status: 200, description: 'Paginated invoice list', type: InvoiceListDataResponse })
   async list(@Query() query: ListInvoicesQuery) {
     const result: Paginated<Invoice> = await this.invoices.list(query)
-    return { data: result.data.map(present), paging: result.paging }
+    return { data: result.data.map(presentInvoice), paging: result.paging }
   }
 
   @Get(':id')
@@ -43,6 +37,6 @@ export class InvoiceController {
   @ApiResponse({ status: 200, description: 'Invoice detail', type: InvoiceDetailDataResponse })
   @ApiResponse({ status: 404, description: 'Invoice not found' })
   async findById(@Param('id') id: string) {
-    return present(await this.invoices.findById(id))
+    return presentInvoice(await this.invoices.findById(id))
   }
 }

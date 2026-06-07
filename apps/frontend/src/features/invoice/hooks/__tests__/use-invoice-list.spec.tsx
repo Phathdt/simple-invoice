@@ -30,7 +30,7 @@ describe('useInvoiceList', () => {
     vi.clearAllMocks()
     lastParams = undefined
     mockUseList.mockReturnValue({
-      data: { data: [{ id: '1' }], paging: { total: 25, page: 1, pageSize: 10 } },
+      data: { data: [{ invoiceId: '1' }], paging: { total: 25, page: 1, pageSize: 10 } },
       isLoading: false,
       isError: false,
     })

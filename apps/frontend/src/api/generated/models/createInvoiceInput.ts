@@ -22,7 +22,7 @@ export interface CreateInvoiceInput {
   description?: string;
   /** @minLength 1 */
   customerName: string;
-  /** @pattern ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$ */
+  /** @pattern ^[^\s@]+@[^\s@]+\.[^\s@]+$ */
   customerEmail: string;
   customerMobile?: string;
   customerAddress?: string;

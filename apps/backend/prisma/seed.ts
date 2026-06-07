@@ -103,7 +103,7 @@ async function main() {
         status,
         customerName: faker.person.fullName(),
         customerEmail: faker.internet.email(),
-        customerMobile: faker.datatype.boolean(0.7) ? faker.phone.number() : null,
+        customerMobile: faker.datatype.boolean(0.7) ? faker.phone.number({ style: 'international' }) : null,
         customerAddress: faker.datatype.boolean(0.7) ? faker.location.streetAddress({ useFullAddress: true }) : null,
         taxRate: tax,
         invoiceSubTotal,

@@ -2,6 +2,7 @@ import { createZodDto } from 'nestjs-zod'
 import { z } from 'zod'
 
 import { emailSchema } from '../../../../common/dto/email.schema'
+import { phoneSchema } from '../../../../common/dto/phone.schema'
 import { symbolForCurrency } from '../entities/currency'
 
 const itemSchema = z.object({
@@ -27,7 +28,7 @@ export const createInvoiceSchema = z
 
     customerName: z.string().min(1),
     customerEmail: emailSchema,
-    customerMobile: z.string().optional(),
+    customerMobile: phoneSchema.optional(),
     customerAddress: z.string().optional(),
 
     items: z.array(itemSchema).length(1),

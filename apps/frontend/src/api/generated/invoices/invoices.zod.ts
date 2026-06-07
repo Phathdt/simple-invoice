@@ -17,7 +17,7 @@ export const invoiceControllerCreateBodyDueDateRegExp = new RegExp('^(?:(?:\\d\\
 
 
 
-export const invoiceControllerCreateBodyCustomerEmailRegExp = new RegExp('^(?!\\.)(?!.\*\\.\\.)([A-Za-z0-9_\'+\\-\\.]\*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]\*\\.)+[A-Za-z]{2,}$');
+export const invoiceControllerCreateBodyCustomerEmailRegExp = new RegExp('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
 
 export const invoiceControllerCreateBodyItemsItemQuantityExclusiveMin = 0;
 export const invoiceControllerCreateBodyItemsItemQuantityMax = 9007199254740991;
@@ -43,7 +43,7 @@ export const InvoiceControllerCreateBody = zod.object({
   "currencySymbol": zod.string().min(1),
   "description": zod.string().optional(),
   "customerName": zod.string().min(1),
-  "customerEmail": zod.email().regex(invoiceControllerCreateBodyCustomerEmailRegExp),
+  "customerEmail": zod.string().regex(invoiceControllerCreateBodyCustomerEmailRegExp),
   "customerMobile": zod.string().optional(),
   "customerAddress": zod.string().optional(),
   "items": zod.array(zod.object({
@@ -87,7 +87,7 @@ export const InvoiceControllerListQueryParams = zod.object({
 
 export const InvoiceControllerListResponse = zod.object({
   "data": zod.array(zod.object({
-  "id": zod.string(),
+  "invoiceId": zod.string(),
   "invoiceNumber": zod.string(),
   "invoiceReference": zod.string().nullish(),
   "invoiceDate": zod.string(),
@@ -96,10 +96,12 @@ export const InvoiceControllerListResponse = zod.object({
   "currencySymbol": zod.string(),
   "description": zod.string().nullish(),
   "status": zod.string(),
-  "customerName": zod.string(),
-  "customerEmail": zod.string(),
-  "customerMobile": zod.string().nullish(),
-  "customerAddress": zod.string().nullish(),
+  "customer": zod.object({
+  "fullname": zod.string(),
+  "email": zod.string(),
+  "mobileNumber": zod.string().nullish(),
+  "address": zod.string().nullish()
+}),
   "taxRate": zod.number(),
   "invoiceSubTotal": zod.number(),
   "totalTax": zod.number(),
@@ -132,7 +134,7 @@ export const InvoiceControllerFindByIdParams = zod.object({
 
 export const InvoiceControllerFindByIdResponse = zod.object({
   "data": zod.object({
-  "id": zod.string(),
+  "invoiceId": zod.string(),
   "invoiceNumber": zod.string(),
   "invoiceReference": zod.string().nullish(),
   "invoiceDate": zod.string(),
@@ -141,10 +143,12 @@ export const InvoiceControllerFindByIdResponse = zod.object({
   "currencySymbol": zod.string(),
   "description": zod.string().nullish(),
   "status": zod.string(),
-  "customerName": zod.string(),
-  "customerEmail": zod.string(),
-  "customerMobile": zod.string().nullish(),
-  "customerAddress": zod.string().nullish(),
+  "customer": zod.object({
+  "fullname": zod.string(),
+  "email": zod.string(),
+  "mobileNumber": zod.string().nullish(),
+  "address": zod.string().nullish()
+}),
   "taxRate": zod.number(),
   "invoiceSubTotal": zod.number(),
   "totalTax": zod.number(),

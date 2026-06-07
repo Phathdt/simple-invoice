@@ -129,7 +129,7 @@ describe('Invoice (integration)', () => {
     const res = await request(app.getHttpServer()).get('/invoices').query({ keyword: 'ZZZ Unique' }).set(auth())
     expect(res.status).toBe(200)
     expect(res.body.data.length).toBeGreaterThan(0)
-    expect(res.body.data.every((i: { customerName: string }) => i.customerName.includes('ZZZ Unique'))).toBe(true)
+    expect(res.body.data.every((i: { customer: { fullname: string } }) => i.customer.fullname.includes('ZZZ Unique'))).toBe(true)
   })
 
   it('GET /invoices?status=Overdue returns only unsettled past-due invoices', async () => {
@@ -157,11 +157,11 @@ describe('Invoice (integration)', () => {
 
   it('GET /invoices/:id returns invoice with items', async () => {
     const created = await request(app.getHttpServer()).post('/invoices').set(auth()).send(validInvoice())
-    const id = created.body.data.id
+    const id = created.body.data.invoiceId
 
     const res = await request(app.getHttpServer()).get(`/invoices/${id}`).set(auth())
     expect(res.status).toBe(200)
-    expect(res.body.data.id).toBe(id)
+    expect(res.body.data.invoiceId).toBe(id)
     expect(res.body.data.items).toHaveLength(1)
   })
 
@@ -196,7 +196,7 @@ describe('Invoice (integration)', () => {
       .set(auth())
 
     expect(res.status).toBe(200)
-    const names = res.body.data.map((i: { customerName: string }) => i.customerName)
+    const names = res.body.data.map((i: { customer: { fullname: string } }) => i.customer.fullname)
     expect(names).toEqual([`${tag}-USD`, `${tag}-JPY`])
   })
 

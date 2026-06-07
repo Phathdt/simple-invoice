@@ -55,9 +55,9 @@ describe('Invoice list page', () => {
       data: {
         data: [
           {
-            id: '1',
+            invoiceId: '1',
             invoiceNumber: 'IV-001',
-            customerName: 'Acme Corp',
+            customer: { fullname: 'Acme Corp', email: 'acme@example.com', mobileNumber: null, address: null },
             invoiceDate: '2026-01-01',
             dueDate: '2026-02-01',
             totalAmount: 1100,
@@ -93,9 +93,9 @@ describe('Invoice list page', () => {
       data: {
         data: [
           {
-            id: 'abc-123',
+            invoiceId: 'abc-123',
             invoiceNumber: 'IV-002',
-            customerName: 'Beta Inc',
+            customer: { fullname: 'Beta Inc', email: 'beta@example.com', mobileNumber: null, address: null },
             invoiceDate: '2026-01-01',
             dueDate: '2026-02-01',
             totalAmount: 500,
@@ -129,9 +129,9 @@ describe('Invoice list page', () => {
       data: {
         data: [
           {
-            id: '2',
+            invoiceId: '2',
             invoiceNumber: 'IV-003',
-            customerName: 'Gamma Ltd',
+            customer: { fullname: 'Gamma Ltd', email: 'gamma@example.com', mobileNumber: null, address: null },
             invoiceDate: '2025-01-01',
             dueDate: '2025-02-01',
             totalAmount: 200,

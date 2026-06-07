@@ -30,7 +30,7 @@ describe('useInvoiceDetail', () => {
     vi.clearAllMocks()
     lastId = undefined
     mockUseFindById.mockReturnValue({
-      data: { data: { id: 'inv-1', currencySymbol: '$' } },
+      data: { data: { invoiceId: 'inv-1', currencySymbol: '$' } },
       isLoading: false,
       isError: false,
     })

@@ -61,10 +61,10 @@ export function InvoiceDetailPage() {
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Customer</h3>
                 <dl className="space-y-2.5 text-sm">
-                  <Row label="Name" value={invoice.customerName} />
-                  <Row label="Email" value={invoice.customerEmail} />
-                  {invoice.customerMobile && <Row label="Phone" value={invoice.customerMobile} />}
-                  {invoice.customerAddress && <Row label="Address" value={invoice.customerAddress} />}
+                  <Row label="Name" value={invoice.customer.fullname} />
+                  <Row label="Email" value={invoice.customer.email} />
+                  {invoice.customer.mobileNumber && <Row label="Phone" value={invoice.customer.mobileNumber} />}
+                  {invoice.customer.address && <Row label="Address" value={invoice.customer.address} />}
                 </dl>
               </section>
             </div>

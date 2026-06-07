@@ -10,8 +10,15 @@ export const invoiceItemResponseSchema = z.object({
   rate: z.number(),
 })
 
+export const customerResponseSchema = z.object({
+  fullname: z.string(),
+  email: z.string(),
+  mobileNumber: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+})
+
 export const invoiceResponseSchema = z.object({
-  id: z.string(),
+  invoiceId: z.string(),
   invoiceNumber: z.string(),
   invoiceReference: z.string().nullable().optional(),
   invoiceDate: z.string(),
@@ -21,10 +28,7 @@ export const invoiceResponseSchema = z.object({
   description: z.string().nullable().optional(),
   status: z.string(),
 
-  customerName: z.string(),
-  customerEmail: z.string(),
-  customerMobile: z.string().nullable().optional(),
-  customerAddress: z.string().nullable().optional(),
+  customer: customerResponseSchema,
 
   taxRate: z.number(),
   invoiceSubTotal: z.number(),

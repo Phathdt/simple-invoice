@@ -28,7 +28,7 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 const mockInvoice = {
-  id: 'test-id-123',
+  invoiceId: 'test-id-123',
   invoiceNumber: 'IV-001',
   invoiceReference: 'REF-001',
   invoiceDate: '2026-01-01',
@@ -37,10 +37,12 @@ const mockInvoice = {
   currencySymbol: '$',
   description: 'Test invoice',
   status: 'Draft',
-  customerName: 'Acme Corp',
-  customerEmail: 'acme@example.com',
-  customerMobile: '+1234567890',
-  customerAddress: '123 Main St',
+  customer: {
+    fullname: 'Acme Corp',
+    email: 'acme@example.com',
+    mobileNumber: '+1234567890',
+    address: '123 Main St',
+  },
   invoiceSubTotal: 200,
   taxRate: 10,
   totalTax: 20,

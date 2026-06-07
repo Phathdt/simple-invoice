@@ -321,8 +321,7 @@ components:
           minLength: 1
         customerEmail:
           type: string
-          format: email
-          pattern: ^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$
+          pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
         customerMobile:
           type: string
         customerAddress:
@@ -373,7 +372,7 @@ components:
         data:
           type: object
           properties:
-            id:
+            invoiceId:
               type: string
             invoiceNumber:
               type: string
@@ -393,16 +392,22 @@ components:
               nullable: true
             status:
               type: string
-            customerName:
-              type: string
-            customerEmail:
-              type: string
-            customerMobile:
-              type: string
-              nullable: true
-            customerAddress:
-              type: string
-              nullable: true
+            customer:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                email:
+                  type: string
+                mobileNumber:
+                  type: string
+                  nullable: true
+                address:
+                  type: string
+                  nullable: true
+              required:
+                - fullname
+                - email
             taxRate:
               type: number
             invoiceSubTotal:
@@ -440,15 +445,14 @@ components:
             createdAt:
               type: string
           required:
-            - id
+            - invoiceId
             - invoiceNumber
             - invoiceDate
             - dueDate
             - currency
             - currencySymbol
             - status
-            - customerName
-            - customerEmail
+            - customer
             - taxRate
             - invoiceSubTotal
             - totalTax
@@ -469,7 +473,7 @@ components:
           items:
             type: object
             properties:
-              id:
+              invoiceId:
                 type: string
               invoiceNumber:
                 type: string
@@ -489,16 +493,22 @@ components:
                 nullable: true
               status:
                 type: string
-              customerName:
-                type: string
-              customerEmail:
-                type: string
-              customerMobile:
-                type: string
-                nullable: true
-              customerAddress:
-                type: string
-                nullable: true
+              customer:
+                type: object
+                properties:
+                  fullname:
+                    type: string
+                  email:
+                    type: string
+                  mobileNumber:
+                    type: string
+                    nullable: true
+                  address:
+                    type: string
+                    nullable: true
+                required:
+                  - fullname
+                  - email
               taxRate:
                 type: number
               invoiceSubTotal:
@@ -536,15 +546,14 @@ components:
               createdAt:
                 type: string
             required:
-              - id
+              - invoiceId
               - invoiceNumber
               - invoiceDate
               - dueDate
               - currency
               - currencySymbol
               - status
-              - customerName
-              - customerEmail
+              - customer
               - taxRate
               - invoiceSubTotal
               - totalTax

@@ -152,13 +152,13 @@ export function HomePage() {
                   )}
                   {invoices.map((invoice) => (
                     <tr
-                      key={invoice.id}
+                      key={invoice.invoiceId}
                       data-testid="invoice-row"
-                      onClick={() => openInvoice(invoice.id)}
+                      onClick={() => openInvoice(invoice.invoiceId)}
                       className="cursor-pointer border-b border-slate-100 transition-colors duration-150 last:border-0 hover:bg-slate-50"
                     >
                       <td className="px-4 py-3 font-medium text-slate-900">{invoice.invoiceNumber}</td>
-                      <td className="px-4 py-3 text-slate-700">{invoice.customerName}</td>
+                      <td className="px-4 py-3 text-slate-700">{invoice.customer.fullname}</td>
                       <td className="px-4 py-3 tabular-nums text-slate-500">{invoice.invoiceDate}</td>
                       <td className="px-4 py-3 tabular-nums text-slate-500">{invoice.dueDate}</td>
                       <td className="px-4 py-3 text-right font-medium tabular-nums text-slate-900">

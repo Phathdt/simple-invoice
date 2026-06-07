@@ -2,7 +2,6 @@
 
 ### Web Engineer Assessment v2.3.
 
-
 ### 1 Background
 
 This document presents a mini-project assessment intended to evaluate the technical and problem-
@@ -29,7 +28,6 @@ manage the complete application stack, including the frontend, backend, and data
 A mock dataset is provided in Appendix A to assist with database seeding and to provide guidance on
 the expected data structure and relationships.
 
-
 ### 2 Solution Requirements
 
 #### 2.1 The SimpleInvoice Overview
@@ -49,9 +47,9 @@ requirements:
 - Provide a Login screen containing email address and password input fields.
 - Implement appropriate client-side and server-side validation for all authentication inputs.
 - Upon successful authentication, issue a JSON Web Token (JWT) and securely store the token
-    on the client side for use in subsequent API requests.
+  on the client side for use in subsequent API requests.
 - Restrict access to all protected application routes and resources. Users who are not
-    authenticated must be automatically redirected to the Login screen.
+  authenticated must be automatically redirected to the Login screen.
 
 Note: The implementation of advanced password policies (e.g., complexity requirements, special
 character enforcement, password expiration, or multi-factor authentication) is not required as part of
@@ -61,21 +59,20 @@ this assessment.
 
 - Set this as the default home screen on successful login
 - Display a paginated list of invoices showing key fields: Invoice Number, Customer Name,
-    Invoice Date, Due Date, Total Amount, Status
+  Invoice Date, Due Date, Total Amount, Status
 - Support the following list management features:
-    ◦ Search — by invoice number or customer name; case-insensitive, partial match
-       supported
-    ◦ Filter — by invoice _status_ (Draft, Pending, Paid, Overdue)
-    ◦ Sort — by invoiceDate, dueDate, or totalAmount (ascending / descending)
-    ◦ Pagination — server-side with a configurable page size.
+  ◦ Search — by invoice number or customer name; case-insensitive, partial match
+  supported
+  ◦ Filter — by invoice _status_ (Draft, Pending, Paid, Overdue)
+  ◦ Sort — by invoiceDate, dueDate, or totalAmount (ascending / descending)
+  ◦ Pagination — server-side with a configurable page size.
 
 Upon successful authentication, users shall be directed to the Invoice List screen, which serves as the
 default landing page of the application.
 
 - The screen must display a paginated list of invoices, presenting the following key information
-    for each record:
-    o Invoice Number
-
+  for each record:
+  o Invoice Number
 
 ```
 o Customer Name
@@ -84,31 +81,33 @@ o Due Date
 o Total Amount
 o Invoice Status
 ```
+
 The Invoice List must support the following data management capabilities:
 
 - Search
-    Users must be able to search invoices using either the Invoice Number or Customer Name
-    fields. The search functionality must support:
-    o Case-insensitive matching.
-    o Partial text matching.
+  Users must be able to search invoices using either the Invoice Number or Customer Name
+  fields. The search functionality must support:
+  o Case-insensitive matching.
+  o Partial text matching.
 - Filter
-    Users must be able to filter invoices by the following status values:
-    o Draft
-    o Pending
-    o Paid
-    o Overdue.
+  Users must be able to filter invoices by the following status values:
+  o Draft
+  o Pending
+  o Paid
+  o Overdue.
 - Sort
-    Users must be able to sort invoice records by any of the following fields:
-    o Invoice Date
-    o Due Date
-    o Total Amount.
+  Users must be able to sort invoice records by any of the following fields:
+  o Invoice Date
+  o Due Date
+  o Total Amount.
 
 ```
 Sorting must support both ascending and descending order.
 ```
+
 - Pagination
-    The invoice list must implement server-side pagination. The page size should be configurable
-    and support efficient retrieval of invoice records from the backend.
+  The invoice list must implement server-side pagination. The page size should be configurable
+  and support efficient retrieval of invoice records from the backend.
 
 ##### 2.1.3 Invoice Detail
 
@@ -123,7 +122,6 @@ comprehensive information relating to the selected invoice, including:
 - Invoice line items
 - Subtotal amount
 
-
 - Tax amount
 - Discount amount
 - Total invoice amount
@@ -137,7 +135,7 @@ in the system.
 
 - A screen/form to create a new invoice
 - Each invoice contains exactly one line item for this assessment. The data model may be
-    designed to support multiple items in the future, but only one item needs to be implemented.
+  designed to support multiple items in the future, but only one item needs to be implemented.
 - New invoices must be created with status Draft
 - Invoice number is user-provided and must be unique
 - Required fields and their validation rules:
@@ -145,38 +143,46 @@ in the system.
 ```
 Field Validation
 ```
+
 ```
 Customer name Required, non-empty string
 Customer email Required, valid email format
 ```
+
 ```
 Customer mobile Optional
 ```
+
 ```
 Customer address Optional
 Invoice number Required, unique
 ```
+
 ```
 Invoice date Required, valid date
 Due date Required, must be on or after invoice date
 ```
+
 ```
 Currency Required (e.g. AUD, USD, GBP)
 ```
+
 ```
 Item name Required
 Item quantity Required, positive integer
 ```
+
 ```
 Item rate Required, positive number
 Tax (%) Non-negative number, defaults to 10%
 ```
+
 ```
 Discount Optional, non-negative number, defaults to 0
 ```
+
 - On successful creation, show a success notification and redirect to the Invoice List
 - Total amount must be calculated by the backend, not the frontend.
-
 
 #### 2.2 Frontend Implementation Requirements
 
@@ -186,13 +192,13 @@ The following requirements must be adhered to:
 
 - The application must be fully responsive and support both mobile and desktop viewports.
 - Candidates may use any preferred styling approach or library (e.g., CSS, SCSS, styled-
-    components, or UI frameworks).
+  components, or UI frameworks).
 - The use of widely adopted open-source libraries is permitted and encouraged where
-    appropriate.
+  appropriate.
 - The codebase must be clean, maintainable, and adequately documented to support
-    readability and future maintenance.
+  readability and future maintenance.
 - Unit testing is mandatory. While no minimum test coverage threshold is enforced, candidates
-    are expected to provide tests for critical user flows and key UI components.
+  are expected to provide tests for critical user flows and key UI components.
 
 #### 2.3 Backend Implementation Requirements
 
@@ -210,36 +216,43 @@ persistence and retrieval for all application features.
 ```
 Method Endpoint Auth Description
 ```
+
 ```
 POST /auth/login^ ✗ Authenticate user, return JWT
 ```
+
 ```
 GET /auth/me^ ✓ Return current authenticated user profile
 ```
+
 ```
 GET /invoices^ ✓ List invoices with search, filter, sort, pagination
 ```
+
 ```
 GET /invoices/:id^ ✓ Get invoice detail by ID
 ```
+
 ```
 POST /invoices^ ✓ Create a new invoice
 ```
+
 Query parameters for GET /invoices:
 
 ```
 Parameter Type Description
 ```
+
 page (^) number Page number, starting at 1
 pageSize (^) number Records per page
 sortBy (^) string invoiceDate, dueDate, totalAmount
 ordering (^) string ASC or DESC
 status (^) string Draft, Pending, Paid, Overdue
 
-
 ```
 Parameter Type Description
 ```
+
 keyword (^) string Partial, case-insensitive search on invoice number or customer
 name
 fromDate (^) string Filter invoices on/after this date (YYYY-MM-DD)
@@ -264,6 +277,7 @@ taxAmount = subTotal × (tax% / 100)
 totalAmount = subTotal + taxAmount - discount
 balanceAmount = totalAmount - totalPaid
 ```
+
 - Invoice numbers must be unique — enforced at the database level
 - Due date must be on or after invoice date — validated server-side
 - New invoices are always created with status Draft
@@ -277,6 +291,7 @@ time:
 if status != "Paid" AND dueDate < today → return status as "Overdue"
 otherwise → return the persisted status
 ```
+
 The database stores only Draft, Pending, or Paid. Overdue is never written to the database.
 
 ##### 2.3.3 Authentication & Authorization
@@ -289,53 +304,51 @@ The following requirements apply:
 - Authentication must be based on JWT access tokens.
 - All /invoices API endpoints must be secured using a JWT authentication guard.
 - Token expiration time must be configurable via an environment variable, with a default value
-    of 3600 seconds if not explicitly specified.
-
+  of 3600 seconds if not explicitly specified.
 
 - At least one default user account must be seeded into the database for reviewer access. The
-    corresponding credentials must be clearly documented in the project README file.
+  corresponding credentials must be clearly documented in the project README file.
 
 ##### 2.3.4 Data Seeding
 
 - The backend must include a database seed script responsible for populating the system with
-    sample invoice data.
+  sample invoice data.
 - The following requirements apply:
 - A seed script must be provided to populate the database with initial dataset entries.
 - The mock dataset provided in Appendix A must be used as the foundation for seed data
-    structure and relationships.
+  structure and relationships.
 - Additional invoice records (approximately 20 – 50 entries) must be generated to ensure
-    sufficient data variability for testing.
+  sufficient data variability for testing.
 - Generated records must include a diverse range of:
 - Invoice statuses
 - Invoice dates
 - Due dates
 - Total amounts
 - This is to ensure that key features such as search, filtering, sorting, and pagination can be
-    effectively demonstrated and evaluated.
+  effectively demonstrated and evaluated.
 - The seed script must be runnable with a single command:
-npm run seed
+  npm run seed
 
 ##### 2.3.5 Input Validation
 
 - Use class-validator + class-transformer (NestJS ValidationPipe) on all endpoints
 - Return clear, structured validation error responses:
-{
-"statusCode": 400,
-"message": ["dueDate must be on or after invoiceDate"],
-"error": "Bad Request"
-}
+  {
+  "statusCode": 400,
+  "message": ["dueDate must be on or after invoiceDate"],
+  "error": "Bad Request"
+  }
 
 ##### 2.3.6 Error Handling
 
 - Implement a global exception filter returning consistent error responses:
-{
-"statusCode": 404,
-"message": "Invoice not found",
-"error": "Not Found"
-}
+  {
+  "statusCode": 404,
+  "message": "Invoice not found",
+  "error": "Not Found"
+  }
 
 ##### 2.3.7 Testing Requirements
-
 
 ##### Unit testing is mandatory for the backend implementation. While no minimum test coverage
 
@@ -380,7 +393,6 @@ npm run seed
 
 ##### ◦ Response schemas and status codes.
 
-
 #### 2.4 Architecture Requirements
 
 ##### 2.4.1 Project Structure
@@ -406,13 +418,17 @@ simple-invoice/
 ├── docker-compose.yml
 └── README.md
 ```
+
 ##### 2.4.2 Containerization
 
 - Provide a docker-compose.yml that starts the frontend, backend, and database with a single
-    command:
-docker compose up # modern Docker
+  command:
+  docker compose up # modern Docker
+
 # or
+
 docker-compose up # legacy Docker Compose
+
 - Each service must have its own Dockerfile
 - Document all exposed ports in the README
 
@@ -438,7 +454,6 @@ docker-compose up # legacy Docker Compose
 
 - Hardcoding of sensitive information within the codebase is strictly prohibited.
 
-
 ### 3 Data Model Reference
 
 Use the below as a guide when designing the database schema.
@@ -448,6 +463,7 @@ Use the below as a guide when designing the database schema.
 ```
 Field Type Notes
 ```
+
 invoiceId (^) UUID Primary key, generated by backend
 invoiceNumber (^) string Unique, user-provided
 invoiceReference (^) string Optional external reference
@@ -472,6 +488,7 @@ createdBy (^) UUID FK to User
 ```
 Field Type Notes
 ```
+
 fullname (^) string Required
 email (^) string Required, valid email
 mobileNumber (^) string Optional
@@ -479,12 +496,12 @@ address (^) string Optional
 _Customer may be stored as embedded fields on the Invoice table, or as a separate customers
 table — either approach is acceptable. Document your choice._
 
-
 #### 3.3 Invoice Item
 
 ```
 Field Type Notes
 ```
+
 id (^) UUID Primary key
 invoiceId (^) UUID FK to Invoice
 name (^) string Required
@@ -496,12 +513,12 @@ rate (^) decimal Required, positive
 ```
 Field Type Notes
 ```
+
 id (^) UUID Primary key
 email (^) string Unique, used as login identifier
 passwordHash (^) string Bcrypt hashed
 fullname (^) string Display name
 createdAt (^) datetime Auto-set
-
 
 ### 4 Assessment Criteria & Deliverables
 
@@ -511,31 +528,38 @@ createdAt (^) datetime Auto-set
 Criteria Description
 Packaging Easy to clone, run, and review — minimal setup steps
 ```
+
 ```
 Working and complete app All four features functional as per specification
 ```
+
 ```
 API Design Clean REST API with consistent response shapes and appropriate
 HTTP status codes
 ```
+
 ```
 Database Design Sensible schema, appropriate constraints and indexes
 Business Logic Correct server-side calculation, Overdue derivation, validation rules
 enforced
 Authentication Secure JWT implementation, all protected routes guarded
 ```
+
 ```
 Code Quality Clean, readable, well-organised, follows industry best practices
 ```
+
 ```
 Testing Business logic and key API flows covered by tests
 Documentation Clear README, working Swagger docs, documented assumptions
 ```
+
 ```
 Docker Setup Single command brings up the full stack from zero
 Value Add Additional features or improvements beyond the stated
 requirements
 ```
+
 #### 4.2 Deliverables
 
 Candidates must ensure that all submissions are completed and sent no later than the specified due date and
@@ -554,71 +578,70 @@ The submission must include the following details to ensure proper identificatio
 Note: The submission must include the following components:
 
 - Source code, provided via a GitHub or GitLab repository (preferred), or as a compressed ZIP
-    archive.
+  archive.
 - A README.md file located at the root of the project, which must include the following
-    information:
-       o Project overview and architecture description
-       o Instructions for running the application locally, both with and without Docker
-       o Default login credentials for reviewer access
-       o Instructions for executing the database seed script
-       o Any assumptions or design decisions made during implementation
-       o A list of known limitations or incomplete features within the implementation
-
+  information:
+  o Project overview and architecture description
+  o Instructions for running the application locally, both with and without Docker
+  o Default login credentials for reviewer access
+  o Instructions for executing the database seed script
+  o Any assumptions or design decisions made during implementation
+  o A list of known limitations or incomplete features within the implementation
 
 ### Appendix A — Mock Dataset
 
 Use the following as the basis for your seed script. The quantity field is an integer; the unit of measure
 is not part of the data model.
 
-###### {
+######
 
-```
-"data": [
+```json
 {
-"createdAt": "2026- 06 - 03T12:03:26.995",
-"createdBy": "ad1e0902- 1928 - 4345 - b513-60c86c94fc91",
-"currency": "AUD",
-"currencySymbol": "AU$",
-"customer": {
-"fullname": "Paul",
-"address": "Singapore",
-"email": "paul@101digital.io",
-"mobileNumber": "947717364111"
-},
-"description": "Invoice is issued to Kanglee",
-"dueDate": "2026- 07 - 03",
-"invoiceDate": "2026- 06 - 03",
-"invoiceId": "099ca7da-a290-40fa-93b9-1c43ae7bb887",
-"invoiceNumber": "IV1780488206995",
-"invoiceSubTotal": 2000.00,
-"totalDiscount": 20.00,
-"totalTax": 200.00,
-"totalAmount": 2180.00,
-"totalPaid": 1451.34,
-"balanceAmount": 728.66,
-"items": [
-{
-"id": "b1c2d3e4- 0000 - 0000 - 0000 - 000000000001",
-"name": "Honda RC150",
-"quantity": 2,
-"rate": 1000
+  "data": [
+    {
+      "createdAt": "2026- 06 - 03T12:03:26.995",
+      "createdBy": "ad1e0902- 1928 - 4345 - b513-60c86c94fc91",
+      "currency": "AUD",
+      "currencySymbol": "AU$",
+      "customer": {
+        "fullname": "Paul",
+        "address": "Singapore",
+        "email": "paul@101digital.io",
+        "mobileNumber": "947717364111"
+      },
+      "description": "Invoice is issued to Kanglee",
+      "dueDate": "2026- 07 - 03",
+      "invoiceDate": "2026- 06 - 03",
+      "invoiceId": "099ca7da-a290-40fa-93b9-1c43ae7bb887",
+      "invoiceNumber": "IV1780488206995",
+      "invoiceSubTotal": 2000.0,
+      "totalDiscount": 20.0,
+      "totalTax": 200.0,
+      "totalAmount": 2180.0,
+      "totalPaid": 1451.34,
+      "balanceAmount": 728.66,
+      "items": [
+        {
+          "id": "b1c2d3e4- 0000 - 0000 - 0000 - 000000000001",
+          "name": "Honda RC150",
+          "quantity": 2,
+          "rate": 1000
+        }
+      ],
+      "invoiceReference": "#5721662",
+      "status": "Overdue",
+      "type": "INVOICE",
+      "invoiceGrossTotal": 2000
+    }
+  ],
+  "paging": {
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalRecords": 94980
+  }
 }
-],
-"invoiceReference": "#5721662",
-"status": "Overdue",
-"type": "INVOICE",
-"invoiceGrossTotal": 2000.
 }
-],
-"paging": {
-"pageNumber": 1,
-"pageSize": 10,
-"totalRecords": 94980
 ```
-
-###### }
-
-###### }
 
 ```
 Seed guidance: Generate 20–50 additional records with a mix of statuses (Draft, Pending,
@@ -626,4 +649,3 @@ Paid), varied invoice dates, due dates, amounts, and customer names so that all 
 management features — search, filter, sort, and pagination — are meaningful to test. Do not
 seed Overdue as a stored status; it will be derived automatically.
 ```
-
