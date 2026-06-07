@@ -47,6 +47,10 @@ export class CreateInvoicePage {
     await this.byName('items.0.rate').fill(String(input.rate))
   }
 
+  async fillField(name: string, value: string): Promise<void> {
+    await this.byName(name).fill(value)
+  }
+
   async submit(): Promise<void> {
     await this.submitButton.click()
   }
@@ -59,5 +63,9 @@ export class CreateInvoicePage {
 
   async expectValidationError(): Promise<void> {
     await expect(this.page.getByText('Required').first()).toBeVisible({ timeout: TimeoutValue.ACTION })
+  }
+
+  async expectFieldError(message: string): Promise<void> {
+    await expect(this.page.getByText(message).first()).toBeVisible({ timeout: TimeoutValue.ACTION })
   }
 }

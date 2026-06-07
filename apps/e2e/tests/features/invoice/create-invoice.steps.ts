@@ -41,6 +41,18 @@ When('I fill in the invoice form with a unique invoice number', async function (
   })
 })
 
+When('I fill in the customer email with {string}', async function (this: BrowserWorld, email: string) {
+  const createPage = new CreateInvoicePage(this.page)
+  logger.info(`Filling customer email with invalid value: ${email}`)
+  await createPage.fillField('customerEmail', email)
+})
+
+When('I fill in the customer phone with {string}', async function (this: BrowserWorld, phone: string) {
+  const createPage = new CreateInvoicePage(this.page)
+  logger.info(`Filling customer phone with invalid value: ${phone}`)
+  await createPage.fillField('customerMobile', phone)
+})
+
 When('I submit the create invoice form', async function (this: BrowserWorld) {
   const createPage = new CreateInvoicePage(this.page)
   logger.info('Submitting create invoice form')
@@ -63,4 +75,16 @@ Then('I should see a validation error on the create form', async function (this:
   const createPage = new CreateInvoicePage(this.page)
   logger.info('Expecting validation error')
   await createPage.expectValidationError()
+})
+
+Then('I should see the email validation error {string}', async function (this: BrowserWorld, message: string) {
+  const createPage = new CreateInvoicePage(this.page)
+  logger.info(`Expecting email validation error: ${message}`)
+  await createPage.expectFieldError(message)
+})
+
+Then('I should see the phone validation error {string}', async function (this: BrowserWorld, message: string) {
+  const createPage = new CreateInvoicePage(this.page)
+  logger.info(`Expecting phone validation error: ${message}`)
+  await createPage.expectFieldError(message)
 })
