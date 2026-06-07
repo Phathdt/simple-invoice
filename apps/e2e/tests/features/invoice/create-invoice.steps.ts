@@ -2,6 +2,8 @@ import { Given, Then, When } from '@cucumber/cucumber'
 
 import { getTestCredentials } from '@config/urls.config'
 import { CreateInvoicePage } from '@page-objects/create-invoice.page'
+import { InvoiceDetailPage } from '@page-objects/invoice-detail.page'
+import { InvoiceListPage } from '@page-objects/invoice-list.page'
 import { LoginPage } from '@page-objects/login.page'
 import { uniqueInvoiceNumber } from '@support/api-helpers'
 import { BrowserWorld } from '@support/world'
@@ -87,4 +89,41 @@ Then('I should see the phone validation error {string}', async function (this: B
   const createPage = new CreateInvoicePage(this.page)
   logger.info(`Expecting phone validation error: ${message}`)
   await createPage.expectFieldError(message)
+})
+
+When('I fill in the invoice form with a future due date', async function (this: BrowserWorld) {
+  const invoiceNumber = uniqueInvoiceNumber('E2E')
+  this.data.invoiceNumber = invoiceNumber
+  logger.info(`Filling invoice form (future due date) with number: ${invoiceNumber}`)
+  const createPage = new CreateInvoicePage(this.page)
+  await createPage.fillForm({
+    invoiceNumber,
+    invoiceDate: '2026-06-07',
+    dueDate: '2027-06-07',
+    currency: 'USD',
+    customerName: 'E2E Not Overdue Customer',
+    customerEmail: 'e2e-not-overdue@example.com',
+    itemName: 'E2E Service',
+    quantity: 1,
+    rate: 500,
+  })
+})
+
+When('I open the created invoice from the list', async function (this: BrowserWorld) {
+  const invoiceNumber = this.data.invoiceNumber as string
+  const listPage = new InvoiceListPage(this.page)
+  logger.info(`Opening created invoice from list: ${invoiceNumber}`)
+  await listPage.navigate()
+  await listPage.expectLoaded()
+  await listPage.search(invoiceNumber)
+  await listPage.expectRowVisible(invoiceNumber)
+  await listPage.openRow(invoiceNumber)
+})
+
+Then('the invoice status should be {string}', async function (this: BrowserWorld, status: string) {
+  const invoiceNumber = this.data.invoiceNumber as string
+  const detailPage = new InvoiceDetailPage(this.page)
+  logger.info(`Expecting status "${status}" for invoice: ${invoiceNumber}`)
+  await detailPage.expectLoaded(invoiceNumber)
+  await detailPage.expectStatus(status)
 })

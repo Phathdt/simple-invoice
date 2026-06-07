@@ -16,7 +16,10 @@ function statusClasses(status: string): string {
 export function StatusBadge({ status, size = 'sm' }: { status: string; size?: 'sm' | 'md' }) {
   const sizing = size === 'md' ? 'px-3 py-1 text-sm' : 'px-2.5 py-0.5 text-xs'
   return (
-    <span className={`inline-flex items-center rounded-full font-medium ${sizing} ${statusClasses(status)}`}>
+    <span
+      data-testid="status-badge"
+      className={`inline-flex items-center rounded-full font-medium ${sizing} ${statusClasses(status)}`}
+    >
       {status}
     </span>
   )

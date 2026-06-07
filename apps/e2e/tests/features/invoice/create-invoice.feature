@@ -14,6 +14,15 @@ Feature: Create Invoice
     When I submit the create invoice form without filling it in
     Then I should see a validation error on the create form
 
+  Scenario: Created invoice appears in the list and is not overdue
+    Given I am logged in
+    And I am on the create invoice page
+    When I fill in the invoice form with a future due date
+    And I submit the create invoice form
+    Then I should see the invoice creation success message
+    When I open the created invoice from the list
+    Then the invoice status should be "Draft"
+
   Scenario: Invalid email shows validation error
     Given I am logged in
     And I am on the create invoice page

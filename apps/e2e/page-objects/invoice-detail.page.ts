@@ -16,4 +16,10 @@ export class InvoiceDetailPage {
       timeout: TimeoutValue.ACTION,
     })
   }
+
+  async expectStatus(status: string): Promise<void> {
+    const badge = this.page.getByTestId('status-badge')
+    await expect(badge).toBeVisible({ timeout: TimeoutValue.ACTION })
+    await expect(badge).toHaveText(status)
+  }
 }
