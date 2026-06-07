@@ -29,9 +29,8 @@ function wrapper({ children }: { children: React.ReactNode }) {
 }
 
 async function renderList() {
-  const { Route } = await import('../index')
-  const Component = (Route as { options: { component: React.FC } }).options.component
-  return render(<Component />, { wrapper })
+  const { HomePage } = await import('@/features/invoice/invoice-list-page')
+  return render(<HomePage />, { wrapper })
 }
 
 describe('Invoice list page', () => {

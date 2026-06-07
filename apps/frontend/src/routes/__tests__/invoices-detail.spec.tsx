@@ -57,9 +57,8 @@ const mockInvoice = {
 }
 
 async function renderDetail() {
-  const { Route } = await import('../invoices/$id')
-  const Component = (Route as { options: { component: React.FC } }).options.component
-  return render(<Component />, { wrapper })
+  const { InvoiceDetailPage } = await import('@/features/invoice/invoice-detail-page')
+  return render(<InvoiceDetailPage />, { wrapper })
 }
 
 describe('Invoice detail page', () => {

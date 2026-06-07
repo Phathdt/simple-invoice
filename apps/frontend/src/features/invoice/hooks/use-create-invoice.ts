@@ -58,6 +58,7 @@ export function useCreateInvoice() {
 
   return {
     register: form.register,
+    control: form.control,
     setValue: form.setValue,
     watch: form.watch,
     errors: form.formState.errors,
