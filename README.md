@@ -47,6 +47,21 @@ The backend follows a layered DDD-style architecture per module:
 - pnpm 10+
 - Docker & Docker Compose (for the containerized setup)
 
+## Quick Start (after cloning)
+
+```bash
+pnpm install                                # install workspace deps
+cp apps/backend/.env.example apps/backend/.env
+pnpm db:up                                  # start PostgreSQL (Docker)
+pnpm --filter backend prisma:generate       # generate Prisma client (gitignored)
+pnpm --filter backend prisma:migrate        # apply migrations
+pnpm seed                                   # seed sample users + invoices
+pnpm dev:be                                 # backend → http://localhost:4000
+pnpm dev:fe                                 # frontend → http://localhost:5173
+```
+
+The detailed step-by-step version is below.
+
 ## Running Locally (without Docker)
 
 ### 1. Start PostgreSQL
@@ -75,19 +90,27 @@ JWT_SECRET=dev-secret
 PORT=4000
 ```
 
-### 4. Run database migrations
+### 4. Generate the Prisma client
+
+The generated client is gitignored, so generate it once after cloning (and again whenever `schema.prisma` changes):
+
+```bash
+pnpm --filter backend prisma:generate
+```
+
+### 5. Run database migrations
 
 ```bash
 pnpm --filter backend prisma:migrate
 ```
 
-### 5. Seed the database
+### 6. Seed the database
 
 ```bash
-pnpm --filter backend prisma:seed
+pnpm seed   # or: pnpm --filter backend prisma:seed
 ```
 
-### 6. Start the backend
+### 7. Start the backend
 
 ```bash
 pnpm dev:be
@@ -96,7 +119,7 @@ pnpm dev:be
 API available at `http://localhost:4000`.  
 Swagger UI at `http://localhost:4000/api/docs`.
 
-### 7. Start the frontend
+### 8. Start the frontend
 
 ```bash
 pnpm dev:fe
@@ -134,11 +157,16 @@ Starts PostgreSQL, the backend, and the frontend (once available) in a single co
 | Frontend | http://localhost:8080          |
 | Postgres | localhost:5432                 |
 
-The Docker build runs `prisma migrate deploy` automatically on startup. To seed after startup:
+The Docker build runs `prisma migrate deploy` automatically on startup, so the database schema is ready immediately.
+
+**To seed sample data:** The runtime container does not include development dependencies, so seed from your local machine while Postgres is running in Docker:
 
 ```bash
-docker compose exec backend pnpm prisma:seed
+# Set DATABASE_URL to point to the running Postgres container
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/simple-invoice pnpm seed
 ```
+
+Alternatively, seed before bringing up Docker containers (see [Quick Start](#quick-start-after-cloning) above).
 
 ## Default Login Credentials
 

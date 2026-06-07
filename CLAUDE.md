@@ -27,6 +27,17 @@ pnpm --filter e2e test                    # run Cucumber + Playwright e2e (serve
 pnpm --filter e2e install:browsers        # install Playwright chromium (one-time)
 ```
 
+## Setup (after cloning)
+
+```bash
+pnpm install
+cp apps/backend/.env.example apps/backend/.env
+pnpm db:up                              # start PostgreSQL
+pnpm --filter backend prisma:generate   # generate Prisma client (gitignored)
+pnpm --filter backend prisma:migrate    # apply migrations
+pnpm seed                               # seed users + invoices
+```
+
 ## Stack
 
 | Layer       | Technology                                        |
@@ -123,9 +134,10 @@ NestJS (@nestjs/swagger + nestjs-zod) → docs/openapi.yaml → Orval → React 
 ## Prisma
 
 - Schema: `apps/backend/prisma/schema.prisma`
-- Generated client: `apps/backend/prisma/generated/` (gitignored; regenerated on build)
+- Generated client: `apps/backend/src/generated/prisma/` (gitignored; emitted as TypeScript by the `prisma-client` generator, compiled into `dist` by `nest build`)
 - Config: `apps/backend/prisma.config.ts`
 - Seed users: `*@simple-invoice.dev` / `password123` (alice, bob, carol, dave, eve)
+- After cloning, run `pnpm --filter backend prisma:generate` once before building/running (client is gitignored).
 
 ## E2E Tests
 
