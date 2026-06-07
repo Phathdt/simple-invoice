@@ -32,9 +32,15 @@ export interface CreateInvoiceArgs {
 }
 
 // Unique invoice number per call keeps parallel workers from colliding on the
-// DB unique constraint.
+// DB unique constraint. Format: <prefix>-YYYYMMDD-XXXYYY (date + 6 random chars).
 export function uniqueInvoiceNumber(prefix = 'E2E'): string {
-  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`
+  const now = new Date()
+  const datePart =
+    `${now.getFullYear()}` +
+    `${String(now.getMonth() + 1).padStart(2, '0')}` +
+    `${String(now.getDate()).padStart(2, '0')}`
+  const randomPart = Math.random().toString(36).slice(2, 8).toUpperCase().padEnd(6, '0')
+  return `${prefix}-${datePart}-${randomPart}`
 }
 
 // Seeds an invoice through the REST API so list/detail scenarios have a known row.
