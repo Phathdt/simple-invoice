@@ -7,7 +7,7 @@ let container: StartedPostgreSqlContainer | null = null
 
 export async function startPostgres(): Promise<string> {
   container = await new PostgreSqlContainer('postgres:16-alpine')
-    .withDatabase('looper_test')
+    .withDatabase('simple_invoice_test')
     .withUsername('postgres')
     .withPassword('postgres')
     .start()

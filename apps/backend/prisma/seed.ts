@@ -46,13 +46,14 @@ async function main() {
 
     const creator = users[i % users.length]
 
-    // Item details
-    const itemCount = faker.number.int({ min: 1, max: 4 })
-    const items = Array.from({ length: itemCount }, () => ({
-      name: faker.commerce.productName(),
-      quantity: faker.number.int({ min: 1, max: 10 }),
-      rate: round2(faker.number.float({ min: 10, max: 5000, fractionDigits: 2 })),
-    }))
+    // Exactly one line item per invoice (matches the create constraint).
+    const items = [
+      {
+        name: faker.commerce.productName(),
+        quantity: faker.number.int({ min: 1, max: 10 }),
+        rate: round2(faker.number.float({ min: 10, max: 5000, fractionDigits: 2 })),
+      },
+    ]
 
     const invoiceSubTotal = round2(items.reduce((sum, it) => sum + it.quantity * it.rate, 0))
     const tax = faker.helpers.arrayElement([0, 5, 8, 10])
