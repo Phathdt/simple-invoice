@@ -154,13 +154,13 @@ export function ItemSection({ register, errors }: { register: FormRegister; erro
     <FormSection title='Item'>
       {errors.items?.root && <p className='mb-2 text-xs text-destructive'>{errors.items.root.message}</p>}
       <div className='grid grid-cols-1 gap-2 sm:grid-cols-[1fr_5rem_7rem]'>
-        <ItemInput error={errors.items?.[0]?.name?.message}>
+        <ItemInput label='Item name *' error={errors.items?.[0]?.name?.message}>
           <Input {...register('items.0.name')} placeholder='Item name' />
         </ItemInput>
-        <ItemInput error={errors.items?.[0]?.quantity?.message}>
+        <ItemInput label='Quantity *' error={errors.items?.[0]?.quantity?.message}>
           <Input type='number' {...register('items.0.quantity', { valueAsNumber: true })} placeholder='Qty' />
         </ItemInput>
-        <ItemInput error={errors.items?.[0]?.rate?.message}>
+        <ItemInput label='Rate *' error={errors.items?.[0]?.rate?.message}>
           <Input type='number' step='0.01' {...register('items.0.rate', { valueAsNumber: true })} placeholder='Rate' />
         </ItemInput>
       </div>
@@ -168,9 +168,10 @@ export function ItemSection({ register, errors }: { register: FormRegister; erro
   )
 }
 
-function ItemInput({ error, children }: { error?: string; children: ReactNode }) {
+function ItemInput({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
     <div className={cn('space-y-1.5')}>
+      <Label>{label}</Label>
       {children}
       {error && <p className='text-xs text-destructive'>{error}</p>}
     </div>
