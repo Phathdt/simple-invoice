@@ -66,7 +66,10 @@ export class CreateInvoicePage {
     const cal = this.page.locator('.rdp-root:visible').last()
     await expect(cal).toBeVisible({ timeout: TimeoutValue.ACTION })
     // Dropdown caption: month value is 0-based, year is full year.
-    await cal.locator('select').first().selectOption(String(month! - 1))
+    await cal
+      .locator('select')
+      .first()
+      .selectOption(String(month! - 1))
     await cal.locator('select').nth(1).selectOption(String(year))
     await cal.locator(`td:not([class*="opacity-50"]) button:text-is("${day}")`).first().click()
   }

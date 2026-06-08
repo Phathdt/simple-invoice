@@ -1,7 +1,8 @@
 import 'dotenv/config'
 
-import { PrismaPg } from '@prisma/adapter-pg'
 import { faker } from '@faker-js/faker'
+import { PrismaPg } from '@prisma/adapter-pg'
+
 import { hash } from 'bcryptjs'
 
 import { PrismaClient } from '../src/generated/prisma/client'
@@ -94,7 +95,9 @@ async function main() {
     await prisma.invoice.create({
       data: {
         invoiceNumber: `IV-${faker.string.alphanumeric({ length: 8, casing: 'upper' })}`,
-        invoiceReference: faker.datatype.boolean(0.4) ? `REF-${faker.string.alphanumeric({ length: 6, casing: 'upper' })}` : null,
+        invoiceReference: faker.datatype.boolean(0.4)
+          ? `REF-${faker.string.alphanumeric({ length: 6, casing: 'upper' })}`
+          : null,
         invoiceDate,
         dueDate,
         currency,

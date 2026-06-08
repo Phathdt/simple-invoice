@@ -1,11 +1,13 @@
+import { useState } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 
 import { useInvoiceControllerCreate } from '@/api/generated/invoices/invoices'
 
-import { type CreateInvoiceForm, createInvoiceSchema } from '../create-invoice-form-schema'
+import { useForm } from 'react-hook-form'
+
+import { createInvoiceSchema, type CreateInvoiceForm } from '../create-invoice-form-schema'
 
 const REDIRECT_DELAY_MS = 700
 

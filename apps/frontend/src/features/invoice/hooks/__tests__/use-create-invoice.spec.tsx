@@ -1,7 +1,11 @@
+import type { ReactNode } from 'react'
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
-import type { ReactNode } from 'react'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { useCreateInvoice } from '../use-create-invoice'
 
 const mockNavigate = vi.fn()
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => mockNavigate }))
@@ -11,8 +15,6 @@ const mockUseCreate = vi.fn()
 vi.mock('@/api/generated/invoices/invoices', () => ({
   useInvoiceControllerCreate: () => mockUseCreate(),
 }))
-
-import { useCreateInvoice } from '../use-create-invoice'
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })

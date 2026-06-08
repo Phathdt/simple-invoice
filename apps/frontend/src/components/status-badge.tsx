@@ -16,7 +16,7 @@ function variantForStatus(status: string): 'default' | 'success' | 'warning' | '
 
 export function StatusBadge({ status, size = 'sm' }: { status: string; size?: 'sm' | 'md' }) {
   return (
-    <Badge data-testid="status-badge" variant={variantForStatus(status)} size={size}>
+    <Badge data-testid='status-badge' variant={variantForStatus(status)} size={size}>
       {status}
     </Badge>
   )

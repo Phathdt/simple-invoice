@@ -8,11 +8,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: simple-invoice
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d simple-invoice"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d simple-invoice']
       interval: 5s
       timeout: 3s
       retries: 10
@@ -35,9 +35,9 @@ services:
       NODE_ENV: production
       LOG_LEVEL: info
     ports:
-      - "4000:4000"
+      - '4000:4000'
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4000/health"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:4000/health']
       interval: 10s
       timeout: 3s
       retries: 5
@@ -52,7 +52,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "8080:80"
+      - '8080:80'
 
 volumes:
   postgres_data:

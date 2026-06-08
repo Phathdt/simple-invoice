@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { useAuthControllerLogin } from '@/api/generated/auth/auth'
 import { setToken } from '@/lib/auth'
 import { emailSchema } from '@/lib/validation'
+
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 export const loginSchema = z.object({
   email: emailSchema,

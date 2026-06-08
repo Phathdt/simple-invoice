@@ -45,4 +45,3 @@ export function formatMoney(amount: number, currency: string, symbol: string): s
   })
   return SUFFIX_SYMBOL_CURRENCIES.has(currency) ? `${formatted} ${symbol}` : `${symbol}${formatted}`
 }
-

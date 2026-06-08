@@ -1,10 +1,10 @@
-import { format, parse } from 'date-fns'
-import { Calendar as CalendarIcon } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
+
+import { format, parse } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
 
 const ISO_FORMAT = 'yyyy-MM-dd'
 
@@ -25,33 +25,27 @@ interface DatePickerProps {
   className?: string
 }
 
-export function DatePicker({
-  value,
-  onChange,
-  placeholder = 'Pick a date',
-  className,
-  ...rest
-}: DatePickerProps) {
+export function DatePicker({ value, onChange, placeholder = 'Pick a date', className, ...rest }: DatePickerProps) {
   const selected = isoToDate(value)
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          type="button"
-          variant="outline"
+          type='button'
+          variant='outline'
           data-testid={rest['data-testid']}
           aria-label={rest['aria-label']}
           className={cn('w-full justify-start font-normal', !selected && 'text-muted-foreground', className)}
         >
-          <CalendarIcon className="opacity-60" />
+          <CalendarIcon className='opacity-60' />
           {selected ? format(selected, ISO_FORMAT) : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0">
+      <PopoverContent className='p-0'>
         <Calendar
-          mode="single"
-          captionLayout="dropdown"
+          mode='single'
+          captionLayout='dropdown'
           startMonth={new Date(2000, 0)}
           endMonth={new Date(2100, 11)}
           defaultMonth={selected}

@@ -1,6 +1,6 @@
-import { z } from 'zod'
-
 import { emailSchema, phoneSchema } from '@/lib/validation'
+
+import { z } from 'zod'
 
 import { symbolForCurrency } from './currency'
 

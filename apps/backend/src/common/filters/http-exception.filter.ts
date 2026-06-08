@@ -1,14 +1,7 @@
-import {
-  type ArgumentsHost,
-  Catch,
-  type ExceptionFilter,
-  HttpException,
-  HttpStatus,
-  Logger,
-} from '@nestjs/common'
-import { ZodValidationException } from 'nestjs-zod'
+import { Catch, HttpException, HttpStatus, Logger, type ArgumentsHost, type ExceptionFilter } from '@nestjs/common'
 
 import type { Response } from 'express'
+import { ZodValidationException } from 'nestjs-zod'
 
 interface ErrorBody {
   statusCode: number

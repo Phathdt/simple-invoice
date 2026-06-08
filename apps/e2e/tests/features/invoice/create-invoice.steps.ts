@@ -1,6 +1,5 @@
-import { Given, Then, When } from '@cucumber/cucumber'
-
 import { getTestCredentials } from '@config/urls.config'
+import { Given, Then, When } from '@cucumber/cucumber'
 import { CreateInvoicePage } from '@page-objects/create-invoice.page'
 import { InvoiceDetailPage } from '@page-objects/invoice-detail.page'
 import { InvoiceListPage } from '@page-objects/invoice-list.page'

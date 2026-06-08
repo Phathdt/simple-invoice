@@ -12,8 +12,9 @@ import path from 'node:path'
 
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { cleanupOpenApiDoc } from 'nestjs-zod'
+
 import { dump as yamlDump } from 'js-yaml'
+import { cleanupOpenApiDoc } from 'nestjs-zod'
 
 import { AppModule } from './app.module'
 

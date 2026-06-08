@@ -122,14 +122,14 @@ NestJS (@nestjs/swagger + nestjs-zod) → docs/openapi.yaml → Orval → React 
 
 ## Environment Variables
 
-| Variable        | Default | Description                       |
-| --------------- | ------- | --------------------------------- |
-| `DATABASE_URL`  | —       | PostgreSQL connection string      |
-| `JWT_SECRET`    | —       | JWT signing secret                |
-| `JWT_EXPIRES_IN`| `3600`  | Token TTL in seconds              |
-| `PORT`          | `4000`  | HTTP server port                  |
-| `NODE_ENV`      | —       | `development` or `production`     |
-| `LOG_LEVEL`     | `info`  | Pino log level                    |
+| Variable         | Default | Description                   |
+| ---------------- | ------- | ----------------------------- |
+| `DATABASE_URL`   | —       | PostgreSQL connection string  |
+| `JWT_SECRET`     | —       | JWT signing secret            |
+| `JWT_EXPIRES_IN` | `3600`  | Token TTL in seconds          |
+| `PORT`           | `4000`  | HTTP server port              |
+| `NODE_ENV`       | —       | `development` or `production` |
+| `LOG_LEVEL`      | `info`  | Pino log level                |
 
 ## Prisma
 

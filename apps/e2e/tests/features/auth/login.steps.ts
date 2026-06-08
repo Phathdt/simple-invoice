@@ -1,8 +1,7 @@
-import { Given, Then, When } from '@cucumber/cucumber'
-
 import { getTestCredentials } from '@config/urls.config'
-import { LoginPage } from '@page-objects/login.page'
+import { Given, Then, When } from '@cucumber/cucumber'
 import { InvoiceListPage } from '@page-objects/invoice-list.page'
+import { LoginPage } from '@page-objects/login.page'
 import { BrowserWorld } from '@support/world'
 import { logger } from '@utils/logger'
 

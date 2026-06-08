@@ -3,8 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 
 import { LoggerModule } from 'nestjs-pino'
 
-import { buildLoggerConfig } from './logger.config'
 import { CommonModule } from './common/common.module'
+import { buildLoggerConfig } from './logger.config'
 import { AuthModule } from './modules/auth/auth.module'
 import { InvoiceModule } from './modules/invoice/invoice.module'
 import { PrismaModule } from './modules/prisma/prisma.module'

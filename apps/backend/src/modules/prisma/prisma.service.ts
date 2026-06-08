@@ -2,8 +2,8 @@ import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config'
 import { PrismaPg } from '@prisma/adapter-pg'
 
-import { PrismaClient } from '../../generated/prisma/client'
 import { incrementQueryCount, requestContext } from '../../common/request-context'
+import { PrismaClient } from '../../generated/prisma/client'
 
 interface PrismaQueryEvent {
   query: string

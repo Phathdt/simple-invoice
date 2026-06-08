@@ -217,18 +217,18 @@ Page objects use `data-testid` selectors; failing scenarios save a Playwright tr
 
 ## Available Scripts
 
-| Command                                | Description                     |
-| -------------------------------------- | ------------------------------- |
-| `pnpm dev:be`                          | Start backend in watch mode     |
-| `pnpm build`                           | Build all packages              |
-| `pnpm test`                            | Run all tests                   |
-| `pnpm lint`                            | Lint with oxlint                |
-| `pnpm format`                          | Format with Prettier            |
-| `pnpm db:up`                           | Start PostgreSQL container      |
-| `pnpm db:down`                         | Stop PostgreSQL container       |
-| `pnpm --filter backend prisma:migrate` | Run Prisma migrations           |
-| `pnpm --filter backend prisma:seed`    | Seed the database               |
-| `pnpm --filter backend prisma:studio`  | Open Prisma Studio              |
+| Command                                | Description                 |
+| -------------------------------------- | --------------------------- |
+| `pnpm dev:be`                          | Start backend in watch mode |
+| `pnpm build`                           | Build all packages          |
+| `pnpm test`                            | Run all tests               |
+| `pnpm lint`                            | Lint with oxlint            |
+| `pnpm format`                          | Format with Prettier        |
+| `pnpm db:up`                           | Start PostgreSQL container  |
+| `pnpm db:down`                         | Stop PostgreSQL container   |
+| `pnpm --filter backend prisma:migrate` | Run Prisma migrations       |
+| `pnpm --filter backend prisma:seed`    | Seed the database           |
+| `pnpm --filter backend prisma:studio`  | Open Prisma Studio          |
 
 ## Design Decisions
 

@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common'
-import { createZodDto, ZodValidationException } from 'nestjs-zod'
 
+import { createZodDto, ZodValidationException } from 'nestjs-zod'
 import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 

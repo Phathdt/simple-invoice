@@ -1,7 +1,11 @@
+import type { ReactNode } from 'react'
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook } from '@testing-library/react'
-import type { ReactNode } from 'react'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { useLogin } from '../use-login'
 
 const mockNavigate = vi.fn()
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => mockNavigate }))
@@ -14,8 +18,6 @@ const mockUseLogin = vi.fn()
 vi.mock('@/api/generated/auth/auth', () => ({
   useAuthControllerLogin: () => mockUseLogin(),
 }))
-
-import { useLogin } from '../use-login'
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } })

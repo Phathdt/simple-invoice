@@ -1,9 +1,8 @@
-import { Given, Then, When } from '@cucumber/cucumber'
-import { expect } from '@playwright/test'
-
 import { getTestCredentials } from '@config/urls.config'
+import { Given, Then, When } from '@cucumber/cucumber'
 import { InvoiceDetailPage } from '@page-objects/invoice-detail.page'
 import { InvoiceListPage } from '@page-objects/invoice-list.page'
+import { expect } from '@playwright/test'
 import { createInvoiceViaApi, loginViaApi } from '@support/api-helpers'
 import { BrowserWorld } from '@support/world'
 import { logger } from '@utils/logger'
@@ -45,15 +44,12 @@ When('I click on the seeded invoice row', async function (this: BrowserWorld) {
   await listPage.openRow(invoiceNumber)
 })
 
-Then(
-  'I should be on the invoice detail page showing the seeded invoice number',
-  async function (this: BrowserWorld) {
-    const invoiceNumber = this.data.invoiceNumber as string
-    const detailPage = new InvoiceDetailPage(this.page)
-    logger.info(`Expecting detail page for: ${invoiceNumber}`)
-    await detailPage.expectLoaded(invoiceNumber)
-  },
-)
+Then('I should be on the invoice detail page showing the seeded invoice number', async function (this: BrowserWorld) {
+  const invoiceNumber = this.data.invoiceNumber as string
+  const detailPage = new InvoiceDetailPage(this.page)
+  logger.info(`Expecting detail page for: ${invoiceNumber}`)
+  await detailPage.expectLoaded(invoiceNumber)
+})
 
 When('I select {int} rows per page', async function (this: BrowserWorld, size: number) {
   const listPage = new InvoiceListPage(this.page)

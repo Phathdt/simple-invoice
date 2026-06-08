@@ -44,7 +44,10 @@ export function uniqueInvoiceNumber(prefix = 'E2E'): string {
 }
 
 // Seeds an invoice through the REST API so list/detail scenarios have a known row.
-export async function createInvoiceViaApi(token: string, args: CreateInvoiceArgs = {}): Promise<{ id: string; invoiceNumber: string }> {
+export async function createInvoiceViaApi(
+  token: string,
+  args: CreateInvoiceArgs = {},
+): Promise<{ id: string; invoiceNumber: string }> {
   const invoiceNumber = args.invoiceNumber ?? uniqueInvoiceNumber()
   const data = await post<{ id: string; invoiceNumber: string }>(
     '/invoices',

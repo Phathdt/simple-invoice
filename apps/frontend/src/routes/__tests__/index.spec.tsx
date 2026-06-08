@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockNavigate = vi.fn()
@@ -146,9 +147,7 @@ describe('Invoice list page', () => {
     })
     await renderList()
     // 'Overdue' appears in both dropdown option and badge span
-    const overdueBadge = screen
-      .getAllByText('Overdue')
-      .find((el) => el.tagName === 'SPAN')
+    const overdueBadge = screen.getAllByText('Overdue').find((el) => el.tagName === 'SPAN')
     expect(overdueBadge).toBeDefined()
     expect(overdueBadge).toHaveClass('bg-red-100')
   })

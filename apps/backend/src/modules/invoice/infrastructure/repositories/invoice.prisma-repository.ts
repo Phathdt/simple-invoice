@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common'
 
 import {
   Prisma,
-  Invoice as PrismaInvoiceModel,
   InvoiceItem as PrismaInvoiceItem,
+  Invoice as PrismaInvoiceModel,
 } from '../../../../generated/prisma/client'
-import type { Invoice, InvoiceItem } from '../../domain/entities/invoice.entity'
 import { InvoiceStatus, OVERDUE_STATUS } from '../../domain/entities/invoice-status'
+import type { Invoice, InvoiceItem } from '../../domain/entities/invoice.entity'
 import { DuplicateInvoiceNumberError } from '../../domain/errors'
 import {
   IInvoiceRepository,
@@ -107,7 +107,10 @@ export class InvoicePrismaRepository implements IInvoiceRepository {
 
     if (filter.status === OVERDUE_STATUS) {
       // Overdue is derived, never persisted: not-yet-settled invoices past due.
-      where.AND = [{ status: { in: [InvoiceStatus.Draft, InvoiceStatus.Pending] } }, { dueDate: { lt: startOfToday() } }]
+      where.AND = [
+        { status: { in: [InvoiceStatus.Draft, InvoiceStatus.Pending] } },
+        { dueDate: { lt: startOfToday() } },
+      ]
     } else if (filter.status === InvoiceStatus.Draft || filter.status === InvoiceStatus.Pending) {
       where.AND = [{ status: filter.status }, { dueDate: { gte: startOfToday() } }]
     } else if (filter.status) {

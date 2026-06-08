@@ -1,9 +1,5 @@
 {
-  "directory": [
-    "./src/modules/auth",
-    "./src/modules/user",
-    "./src/modules/prisma"
-  ],
+  "directory": ["./src/modules/auth", "./src/modules/user", "./src/modules/prisma"],
   "exclude": [
     "\\.spec\\.ts$",
     "\\.integration\\.spec\\.ts$",

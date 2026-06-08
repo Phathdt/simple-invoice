@@ -1,8 +1,8 @@
 import { type INestApplication } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
-import { ZodValidationPipe } from 'nestjs-zod'
 
+import { ZodValidationPipe } from 'nestjs-zod'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
@@ -97,7 +97,13 @@ describe('Invoice (integration)', () => {
     const res = await request(app.getHttpServer())
       .post('/invoices')
       .set(auth())
-      .send({ ...validInvoice(), items: [{ name: 'A', quantity: 1, rate: 100 }, { name: 'B', quantity: 1, rate: 50 }] })
+      .send({
+        ...validInvoice(),
+        items: [
+          { name: 'A', quantity: 1, rate: 100 },
+          { name: 'B', quantity: 1, rate: 50 },
+        ],
+      })
     expect(res.status).toBe(400)
   })
 
@@ -129,7 +135,9 @@ describe('Invoice (integration)', () => {
     const res = await request(app.getHttpServer()).get('/invoices').query({ keyword: 'ZZZ Unique' }).set(auth())
     expect(res.status).toBe(200)
     expect(res.body.data.length).toBeGreaterThan(0)
-    expect(res.body.data.every((i: { customer: { fullname: string } }) => i.customer.fullname.includes('ZZZ Unique'))).toBe(true)
+    expect(
+      res.body.data.every((i: { customer: { fullname: string } }) => i.customer.fullname.includes('ZZZ Unique')),
+    ).toBe(true)
   })
 
   it('GET /invoices?status=Overdue returns only unsettled past-due invoices', async () => {
@@ -201,9 +209,7 @@ describe('Invoice (integration)', () => {
   })
 
   it('GET /invoices/:id returns 404 for unknown id', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/invoices/00000000-0000-0000-0000-000000000000')
-      .set(auth())
+    const res = await request(app.getHttpServer()).get('/invoices/00000000-0000-0000-0000-000000000000').set(auth())
     expect(res.status).toBe(404)
   })
 })

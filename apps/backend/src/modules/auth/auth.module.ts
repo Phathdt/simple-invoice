@@ -8,8 +8,8 @@ import { UserModule } from '../user/user.module'
 import { AuthService } from './application/services/auth.service'
 import { IAuthService } from './domain/interfaces/auth.service'
 import { ITokenSigner } from './domain/interfaces/token-signer'
-import { AuthController } from './infrastructure/http/auth.controller'
 import { JwtAuthGuard } from './infrastructure/guards/jwt-auth.guard'
+import { AuthController } from './infrastructure/http/auth.controller'
 import { JwtTokenSigner } from './infrastructure/token/jwt-token-signer'
 
 @Module({

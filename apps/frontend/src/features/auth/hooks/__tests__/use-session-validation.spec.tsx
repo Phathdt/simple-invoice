@@ -1,7 +1,11 @@
+import type { ReactNode } from 'react'
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook } from '@testing-library/react'
-import type { ReactNode } from 'react'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { useSessionValidation } from '../use-session-validation'
 
 const mockIsAuthenticated = vi.fn()
 vi.mock('@/lib/auth', () => ({ isAuthenticated: () => mockIsAuthenticated() }))
@@ -14,8 +18,6 @@ vi.mock('@/api/generated/auth/auth', () => ({
     return mockUseMe()
   },
 }))
-
-import { useSessionValidation } from '../use-session-validation'
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })

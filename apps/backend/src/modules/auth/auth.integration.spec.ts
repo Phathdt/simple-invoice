@@ -1,8 +1,8 @@
 import { type INestApplication } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, type TestingModule } from '@nestjs/testing'
-import { ZodValidationPipe } from 'nestjs-zod'
 
+import { ZodValidationPipe } from 'nestjs-zod'
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 

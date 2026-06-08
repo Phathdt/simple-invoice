@@ -1,5 +1,5 @@
-import type { Invoice } from '../entities/invoice.entity'
 import type { InvoiceDisplayStatus, InvoiceStatus } from '../entities/invoice-status'
+import type { Invoice } from '../entities/invoice.entity'
 
 export interface InvoiceListFilter {
   page: number

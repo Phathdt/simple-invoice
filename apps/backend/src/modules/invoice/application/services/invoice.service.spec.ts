@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { CreateInvoiceInput } from '../../domain/dto/create-invoice.input'
-import type { Invoice } from '../../domain/entities/invoice.entity'
 import { InvoiceStatus } from '../../domain/entities/invoice-status'
+import type { Invoice } from '../../domain/entities/invoice.entity'
 import { InvoiceNotFoundError, UnsupportedCurrencyError } from '../../domain/errors'
 import type { CreateInvoiceData, IInvoiceRepository } from '../../domain/interfaces/invoice.repository'
 import { InvoiceService } from './invoice.service'

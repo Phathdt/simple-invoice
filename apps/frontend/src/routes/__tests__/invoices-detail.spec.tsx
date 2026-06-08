@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const mockNavigate = vi.fn()
@@ -51,9 +52,7 @@ const mockInvoice = {
   totalAmount: 220,
   totalPaid: 0,
   balanceAmount: 220,
-  items: [
-    { id: 'item-1', name: 'Widget', quantity: 2, rate: 100 },
-  ],
+  items: [{ id: 'item-1', name: 'Widget', quantity: 2, rate: 100 }],
 }
 
 async function renderDetail() {
