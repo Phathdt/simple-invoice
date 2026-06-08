@@ -3,7 +3,7 @@ pre-commit:
   no_stash: true
   commands:
     lint:
-      glob: '*.{ts,tsx,js,cjs,mjs,json}'
+      glob: '*.{ts,tsx,js,cjs,mjs}'
       run: pnpm oxlint {staged_files}
     typecheck:
       glob: '*.{ts,tsx}'
