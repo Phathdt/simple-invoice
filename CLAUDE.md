@@ -92,7 +92,7 @@ apps/frontend/src/
 │       ├── models/            # TS interfaces per DTO
 │       ├── <tag>/<tag>.ts     # React Query hooks + Axios fns + query keys
 │       └── <tag>/<tag>.zod.ts # Zod validation schemas per tag
-├── components/                # Shared presentational UI (app-header, button, status-badge)
+├── components/                # Shared presentational UI (app-header, status-badge, spinner) + ui/ shadcn primitives
 ├── features/                  # Feature-based modules (split by domain)
 │   ├── auth/                  # login-page + hooks/{use-login, use-session-validation}
 │   └── invoice/               # list/detail/create pages + form + hooks/{use-invoice-*}
@@ -104,7 +104,9 @@ apps/frontend/src/
 - Feature-based layout: each `features/<name>/` owns its page components, `hooks/` (business logic + tests), and feature-local files.
 - Route files in `src/routes/` stay thin — they only wire `createRoute` (path, `beforeLoad` auth guard) and render the imported feature page. No screen logic lives there.
 - Shared UI in `components/` and token helpers in `lib/auth.ts` are cross-feature.
+- `components/ui/` holds shadcn/ui primitives (button, badge, card, input, select, table, date-picker…); use these directly with their shadcn variants — no app-level button wrapper.
 - `features/auth/hooks/use-session-validation` calls `GET /auth/me` on app load to validate the persisted token on refresh.
+- UI components are documented in Storybook (`@storybook/react-vite`); stories colocated as `*.stories.tsx`. Run `pnpm --filter frontend storybook` (dev) or `build-storybook` (static). Config in `apps/frontend/.storybook/`, reuses `vite.config.ts` + `src/index.css`.
 
 ## API Client Pipeline (type-safe, generated)
 

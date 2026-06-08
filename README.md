@@ -18,7 +18,7 @@ simple-invoice/
 │   ├── frontend/          # React + Vite SPA
 │   │   └── src/
 │   │       ├── api/        # Orval-generated client (hooks + Zod) + Axios mutator
-│   │       ├── components/ # Shared UI (header, button, status badge)
+│   │       ├── components/ # Shared UI (header, status badge, spinner) + ui/ shadcn primitives
 │   │       ├── features/   # Feature modules (auth, invoice) — page + hooks per feature
 │   │       ├── lib/        # auth token helpers
 │   │       ├── routes/     # Thin TanStack Router wiring (renders feature pages)
@@ -142,6 +142,17 @@ pnpm api:generate      # export spec + run Orval (one command)
 
 Generated output lands in `apps/frontend/src/api/generated/` (React Query hooks, TS models, Zod schemas). Re-run `pnpm api:generate` after changing any backend controller or DTO. The committed `docs/openapi.yaml` lets the frontend regenerate without a running backend.
 
+## Component Development (Storybook)
+
+Frontend UI components are developed and documented in isolation with Storybook (`@storybook/react-vite`). Stories are colocated with their components as `*.stories.tsx`.
+
+```bash
+pnpm --filter frontend storybook         # dev server → http://localhost:6006
+pnpm --filter frontend build-storybook   # static build → apps/frontend/storybook-static
+```
+
+Storybook reuses the app's `vite.config.ts` (so the `@` alias and Tailwind work) and loads the global `src/index.css` for accurate design tokens.
+
 ## Running with Docker
 
 ```bash
@@ -224,6 +235,7 @@ Page objects use `data-testid` selectors; failing scenarios save a Playwright tr
 | `pnpm test`                            | Run all tests               |
 | `pnpm lint`                            | Lint with oxlint            |
 | `pnpm format`                          | Format with Prettier        |
+| `pnpm --filter frontend storybook`     | Start Storybook dev server  |
 | `pnpm db:up`                           | Start PostgreSQL container  |
 | `pnpm db:down`                         | Stop PostgreSQL container   |
 | `pnpm --filter backend prisma:migrate` | Run Prisma migrations       |
