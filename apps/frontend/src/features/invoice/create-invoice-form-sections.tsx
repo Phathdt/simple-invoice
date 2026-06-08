@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react'
-import type { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form'
+import { Controller, type Control, type FieldErrors, type UseFormRegister, type UseFormSetValue } from 'react-hook-form'
 
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 
@@ -13,6 +15,7 @@ import type { CreateInvoiceForm } from './create-invoice-form-schema'
 type FormRegister = UseFormRegister<CreateInvoiceForm>
 type FormErrors = FieldErrors<CreateInvoiceForm>
 type FormSetValue = UseFormSetValue<CreateInvoiceForm>
+type FormControl = Control<CreateInvoiceForm>
 
 function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
@@ -24,11 +27,7 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   )
 }
 
-// Native select styled to match shadcn Input. Kept native (not Radix Select) so
-// react-hook-form register() and the [name="currency"] e2e selector keep working.
-const nativeSelectCls =
-  'flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50'
-
+// Currency uses the shadcn Select (Radix); the derived symbol is a read-only Input.
 function FormSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <Card>
@@ -42,10 +41,12 @@ function FormSection({ title, children }: { title: string; children: ReactNode }
 
 export function InvoiceDetailsSection({
   register,
+  control,
   errors,
   setValue,
 }: {
   register: FormRegister
+  control: FormControl
   errors: FormErrors
   setValue: FormSetValue
 }) {
@@ -59,26 +60,58 @@ export function InvoiceDetailsSection({
           <Input {...register('invoiceReference')} />
         </Field>
         <Field label="Invoice date *" error={errors.invoiceDate?.message}>
-          <Input type="date" {...register('invoiceDate')} />
+          <Controller
+            control={control}
+            name="invoiceDate"
+            render={({ field }) => (
+              <DatePicker
+                value={field.value}
+                onChange={field.onChange}
+                data-testid="invoice-date-picker"
+                aria-label="Invoice date"
+              />
+            )}
+          />
         </Field>
         <Field label="Due date *" error={errors.dueDate?.message}>
-          <Input type="date" {...register('dueDate')} />
+          <Controller
+            control={control}
+            name="dueDate"
+            render={({ field }) => (
+              <DatePicker
+                value={field.value}
+                onChange={field.onChange}
+                data-testid="due-date-picker"
+                aria-label="Due date"
+              />
+            )}
+          />
         </Field>
         <Field label="Currency *" error={errors.currency?.message}>
-          <select
-            {...register('currency', {
-              onChange: (e) =>
-                setValue('currencySymbol', symbolForCurrency(e.target.value), { shouldValidate: true }),
-            })}
-            className={nativeSelectCls}
-          >
-            <option value="">Select currency</option>
-            {CURRENCY_CODES.map((code) => (
-              <option key={code} value={code}>
-                {code} ({symbolForCurrency(code)})
-              </option>
-            ))}
-          </select>
+          <Controller
+            control={control}
+            name="currency"
+            render={({ field }) => (
+              <Select
+                value={field.value || undefined}
+                onValueChange={(value) => {
+                  field.onChange(value)
+                  setValue('currencySymbol', symbolForCurrency(value), { shouldValidate: true })
+                }}
+              >
+                <SelectTrigger name="currency" aria-label="Currency">
+                  <SelectValue placeholder="Select currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCY_CODES.map((code) => (
+                    <SelectItem key={code} value={code}>
+                      {code} ({symbolForCurrency(code)})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
         </Field>
         <Field label="Currency symbol" error={errors.currencySymbol?.message}>
           {/* Derived from the selected currency via setValue; read-only so the pair can't drift. */}

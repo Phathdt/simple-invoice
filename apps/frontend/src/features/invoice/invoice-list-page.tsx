@@ -5,6 +5,7 @@ import { Spinner } from '@/components/button'
 import { StatusBadge } from '@/components/status-badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -114,21 +115,21 @@ export function HomePage() {
           </Select>
           <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
             From
-            <Input
-              type="date"
-              aria-label="From date"
+            <DatePicker
               value={state.fromDate}
-              onChange={(e) => onFromDate(e.target.value)}
+              onChange={onFromDate}
+              placeholder="From date"
+              aria-label="From date"
               className="w-auto"
             />
           </label>
           <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
             To
-            <Input
-              type="date"
-              aria-label="To date"
+            <DatePicker
               value={state.toDate}
-              onChange={(e) => onToDate(e.target.value)}
+              onChange={onToDate}
+              placeholder="To date"
+              aria-label="To date"
               className="w-auto"
             />
           </label>
