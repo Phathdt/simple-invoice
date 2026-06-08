@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/app-header'
-import { Spinner } from '@/components/button'
+import { Spinner } from '@/components/spinner'
 import { StatusBadge } from '@/components/status-badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'

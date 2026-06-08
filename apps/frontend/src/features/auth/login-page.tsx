@@ -1,5 +1,6 @@
 import { BrandLogo } from '@/components/app-header'
-import { Button, Spinner } from '@/components/button'
+import { Spinner } from '@/components/spinner'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'

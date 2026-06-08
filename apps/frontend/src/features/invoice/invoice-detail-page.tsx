@@ -1,6 +1,7 @@
 import { AppHeader } from '@/components/app-header'
-import { Button, Spinner } from '@/components/button'
+import { Spinner } from '@/components/spinner'
 import { StatusBadge } from '@/components/status-badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useInvoiceDetail } from '@/features/invoice/hooks/use-invoice-detail'
@@ -14,7 +15,7 @@ export function InvoiceDetailPage() {
     <div className='min-h-dvh bg-muted'>
       <AppHeader
         actions={
-          <Button variant='secondary' onClick={goToList}>
+          <Button variant='outline' onClick={goToList}>
             <ArrowLeft />
             Back
           </Button>

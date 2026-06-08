@@ -1,5 +1,6 @@
 import { AppHeader } from '@/components/app-header'
-import { Button, Spinner } from '@/components/button'
+import { Spinner } from '@/components/spinner'
+import { Button } from '@/components/ui/button'
 import { useCreateInvoice } from '@/features/invoice/hooks/use-create-invoice'
 
 import { CustomerSection, InvoiceDetailsSection, ItemSection, TaxDiscountSection } from './create-invoice-form-sections'
@@ -12,7 +13,7 @@ export function CreateInvoicePage() {
     <div className='min-h-dvh bg-muted'>
       <AppHeader
         actions={
-          <Button type='button' variant='secondary' onClick={goToList}>
+          <Button type='button' variant='outline' onClick={goToList}>
             Cancel
           </Button>
         }
@@ -43,7 +44,7 @@ export function CreateInvoicePage() {
           {isError && <div className='rounded-lg bg-red-50 px-3.5 py-3 text-sm text-red-700'>{errorMessage}</div>}
 
           <div className='flex flex-col-reverse gap-3 sm:flex-row sm:justify-end'>
-            <Button type='button' variant='secondary' onClick={goToList}>
+            <Button type='button' variant='outline' onClick={goToList}>
               Cancel
             </Button>
             <Button type='submit' disabled={isPending} data-testid='create-submit'>
